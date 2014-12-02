@@ -1,6 +1,7 @@
 #ifndef CAR_PHYSICS_H
 #define CAR_PHYSICS_H
 #include <memory>
+#include <cmath>
 
 #include <btBulletDynamicsCommon.h>
 
@@ -24,12 +25,13 @@ public:
 
 
 class Car: public Physics {
+  const btScalar drag_ = 1.15f; //drag coefficient for a short cylinder(wheel)
+
 public:
   typedef std::shared_ptr<Car> shared;
 
-  btScalar engine_force_;
-  btVector3 direction_, traction_force_;
-
+  btScalar engine_force_, speed_;
+  btVector3 direction_, velocity_, traction_force_, drag_force_;
 
   Car();
   virtual ~Car();
