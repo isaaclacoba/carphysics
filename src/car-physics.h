@@ -26,12 +26,14 @@ public:
 
 class Car: public Physics {
   const btScalar drag_ = 1.15f; //drag coefficient for a short cylinder(wheel)
+  const btScalar rolling_resistance_ = 30 * drag_; //approximately
 
 public:
   typedef std::shared_ptr<Car> shared;
 
-  btScalar engine_force_, speed_;
-  btVector3 direction_, velocity_, traction_force_, drag_force_;
+  btScalar f_engine_, speed_;
+  btVector3 direction_, velocity_, f_traction_,
+    f_drag_, f_rolling_resistance_;
 
   Car();
   virtual ~Car();

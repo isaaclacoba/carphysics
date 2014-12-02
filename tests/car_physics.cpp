@@ -1,4 +1,7 @@
 // -*- coding:utf-8; tab-width:4; mode:cpp -*-
+//all formulas are taken from:
+// http://www.asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
+
 #include <bandit/bandit.h>
 
 #include "car-physics.h"
@@ -32,7 +35,7 @@ go_bandit([] () {
             float engine = 0;
             btVector3 f_traction = direction * engine;
 
-            compare_vectors(car->traction_force_, f_traction);
+            compare_vectors(car->f_traction_, f_traction);
           });
 
         it("has drag force applied to traction force", [&]() {
@@ -40,9 +43,20 @@ go_bandit([] () {
             btScalar speed = std::sqrt(velocity.getX()*velocity.getX()+
                                  velocity.getZ()*velocity.getZ());
             const btScalar drag = 1.15f; //drag coefficient for a short cylinder(wheel)
-            btVector3 drag_force = -drag * velocity * speed;
+            btVector3 f_drag = -drag * velocity * speed;
 
-            compare_vectors(car->drag_force_, drag_force);
+            compare_vectors(car->f_drag_, f_drag);
+          });
+
+        it("has rolling resistance becouse of wheels", [&]() {
+            const btScalar drag = 1.15f;
+            const btScalar rolling_resistance = 30 * drag;
+            const btVector3 velocity(1, 0, 1);
+
+            btVector3 f_rolling_resistance = -rolling_resistance * velocity;
+
+            compare_vectors(car->f_rolling_resistance_, f_rolling_resistance);
+
           });
       });
   });
