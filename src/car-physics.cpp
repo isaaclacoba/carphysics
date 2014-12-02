@@ -33,19 +33,22 @@ Physics::stepSimulation(float deltaT, int maxSubSteps) {
   dynamicsWorld_->stepSimulation(deltaT, maxSubSteps);
 }
 
+
 Car::Car(): Physics() {
+  delta_time = 0.00f;
   f_engine_ = 0;
   direction_ = btVector3(1, 0 ,0);
   f_traction_ = direction_ * f_engine_;
 
-  velocity_ = btVector3(1, 0, 1);
-  speed_ = std::sqrt(velocity_.getX()*velocity_.getX()+
-                     velocity_.getZ()*velocity_.getZ());
-  f_drag_ = -drag_ * velocity_ * speed_;
-  f_rolling_resistance_ = -rolling_resistance_ * velocity_;
+  initial_velocity_ = btVector3(0, 0, 0);
+  speed_ = std::sqrt(initial_velocity_.getX()* initial_velocity_.getX()+
+                     initial_velocity_.getZ()* initial_velocity_.getZ());
+  f_drag_ = -drag_ * initial_velocity_ * speed_;
+  f_rolling_resistance_ = -rolling_resistance_ * initial_velocity_;
   f_longitudinal_ = f_traction_ + f_drag_ + f_rolling_resistance_;
 
   acceleration_ = f_longitudinal_ / mass_kg_;
+  velocity_ = initial_velocity_ + acceleration_ * delta_time;
 }
 
 Car::~Car() {

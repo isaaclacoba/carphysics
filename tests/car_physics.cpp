@@ -43,10 +43,10 @@ go_bandit([] () {
               });
 
             it("has drag force applied to traction force", [&]() {
-                btVector3 velocity(1, 0, 1);
+                const btScalar drag = 1.15f; //drag coefficient for a short cylinder(wheel)
+                btVector3 velocity(0, 0, 0);
                 btScalar speed = std::sqrt(velocity.getX()*velocity.getX()+
                                            velocity.getZ()*velocity.getZ());
-                const btScalar drag = 1.15f; //drag coefficient for a short cylinder(wheel)
                 btVector3 f_drag = -drag * velocity * speed;
 
                 compare_vectors(car->f_drag_, f_drag);
@@ -55,7 +55,7 @@ go_bandit([] () {
             it("has rolling resistance becouse of wheels", [&]() {
                 const btScalar drag = 1.15f;
                 const btScalar rolling_resistance = 30 * drag;
-                btVector3 velocity(1, 0, 1);
+                btVector3 velocity(0, 0, 0);
 
                 btVector3 f_rolling_resistance = -rolling_resistance * velocity;
 
@@ -67,7 +67,7 @@ go_bandit([] () {
                 float engine = 0;
                 btVector3 f_traction = direction * engine;
 
-                btVector3 velocity(1, 0, 1);
+                btVector3 velocity(0, 0, 0);
                 btScalar speed = std::sqrt(velocity.getX()*velocity.getX()+
                                            velocity.getZ()*velocity.getZ());
                 const btScalar drag = 1.15f; //drag coefficient for a short cylinder(wheel)
@@ -90,6 +90,13 @@ go_bandit([] () {
             compare_vectors(car->acceleration_, acceleration);
           });
 
+        it("has a velocity that depends on acceleration and time", [&](){
+            btScalar delta_time = 0.00f;
+            btVector3 velocity(0, 0, 0);
+            velocity += car->acceleration_ * delta_time;
+
+            compare_vectors(car->velocity_, velocity);
+          });
       });
   });
 
