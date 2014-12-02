@@ -27,8 +27,11 @@ go_bandit([] () {
 
           });
         it("has direction", [&]() {
-            compare_vectors(car->direction_, btVector3(1, 0, 0));
+            btVector3 direction(1, 0, 0);
+            compare_vectors(car->direction_, direction);
           });
+
+
         describe("moving in straight line", [&]() {
 
             it("has traction force", [&]() {
@@ -78,6 +81,15 @@ go_bandit([] () {
                 compare_vectors(car->f_longitudinal_, f_longitudinal);
               });
           });
+
+        it("has acceleration", [&]() {
+            const btScalar car_mass_kg = 1000;
+            btVector3 f_net = car->f_longitudinal_;
+            btVector3 acceleration = f_net / car_mass_kg;
+
+            compare_vectors(car->acceleration_, acceleration);
+          });
+
       });
   });
 

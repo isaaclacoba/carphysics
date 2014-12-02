@@ -44,6 +44,8 @@ Car::Car(): Physics() {
   f_drag_ = -drag_ * velocity_ * speed_;
   f_rolling_resistance_ = -rolling_resistance_ * velocity_;
   f_longitudinal_ = f_traction_ + f_drag_ + f_rolling_resistance_;
+
+  acceleration_ = f_longitudinal_ / mass_kg_;
 }
 
 Car::~Car() {
