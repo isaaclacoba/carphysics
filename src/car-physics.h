@@ -33,7 +33,7 @@ public:
 
   btScalar f_engine_, speed_;
   btVector3 direction_, velocity_, f_traction_,
-    f_drag_, f_rolling_resistance_;
+    f_drag_, f_rolling_resistance_, f_longitudinal_;
 
   Car();
   virtual ~Car();

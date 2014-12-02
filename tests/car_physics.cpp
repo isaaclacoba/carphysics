@@ -24,6 +24,7 @@ go_bandit([] () {
 
         before_each([&]() {
             car = std::make_shared<Car>();
+
           });
 
         it("has direction", [&]() {
@@ -51,11 +52,30 @@ go_bandit([] () {
         it("has rolling resistance becouse of wheels", [&]() {
             const btScalar drag = 1.15f;
             const btScalar rolling_resistance = 30 * drag;
-            const btVector3 velocity(1, 0, 1);
+            btVector3 velocity(1, 0, 1);
 
             btVector3 f_rolling_resistance = -rolling_resistance * velocity;
 
             compare_vectors(car->f_rolling_resistance_, f_rolling_resistance);
+          });
+
+        it("longitudinal force are equal to sum of these three above forces", [&] () {
+            btVector3 direction(1, 0, 0);
+            float engine = 0;
+            btVector3 f_traction = direction * engine;
+
+            btVector3 velocity(1, 0, 1);
+            btScalar speed = std::sqrt(velocity.getX()*velocity.getX()+
+                                 velocity.getZ()*velocity.getZ());
+            const btScalar drag = 1.15f; //drag coefficient for a short cylinder(wheel)
+            btVector3 f_drag = -drag * velocity * speed;
+
+            const btScalar rolling_resistance = 30 * drag;
+            btVector3 f_rolling_resistance = -rolling_resistance * velocity;
+
+            btVector3 f_longitudinal = f_traction + f_drag + f_rolling_resistance;
+
+            compare_vectors(car->f_longitudinal_, f_longitudinal);
 
           });
       });

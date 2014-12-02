@@ -43,6 +43,7 @@ Car::Car(): Physics() {
                      velocity_.getZ()*velocity_.getZ());
   f_drag_ = -drag_ * velocity_ * speed_;
   f_rolling_resistance_ = -rolling_resistance_ * velocity_;
+  f_longitudinal_ = f_traction_ + f_drag_ + f_rolling_resistance_;
 }
 
 Car::~Car() {
