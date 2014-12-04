@@ -81,7 +81,7 @@ go_bandit([] () {
                 compare_vectors(car->f_longitudinal_, f_longitudinal);
               });
 
-            it("replaced tracking force by braking force when braking", [&](){
+            it("replaced tracking force by braking force when braking", [&]() {
                 const btScalar braking = (car->f_max_engine_) / 2;
                 btVector3 direction(1, 0, 0);
                 float engine = 0;
@@ -110,12 +110,18 @@ go_bandit([] () {
             compare_vectors(car->acceleration_, acceleration);
           });
 
-        it("has a velocity that depends on acceleration and time", [&](){
+        it("has a velocity that depends on acceleration over time", [&]() {
             btScalar delta_time = 0.00f;
             btVector3 velocity(0, 0, 0);
             velocity += car->acceleration_ * delta_time;
 
             compare_vectors(car->velocity_, velocity);
+          });
+        it("wheels have a variable friction depending of the center of mass of the car", [&]() {
+            const btScalar mu = 1.5; //for race cars
+
+            btScalar max_friction = mu * car->mass_kg_ * 1000;
+
           });
       });
   });
