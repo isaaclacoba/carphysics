@@ -19,7 +19,7 @@ compare_vectors(btVector3 vector, btVector3 vector2) {
 }
 
 go_bandit([] () {
-    describe("car physics", []() {
+    describe("not totally realistic car physics", []() {
         Car::shared car;
 
         before_each([&]() {
@@ -78,6 +78,26 @@ go_bandit([] () {
 
                 btVector3 f_longitudinal = f_traction + f_drag + f_rolling_resistance;
 
+                compare_vectors(car->f_longitudinal_, f_longitudinal);
+              });
+
+            it("replaced tracking force by braking force when braking", [&](){
+                const btScalar braking = (car->f_max_engine_) / 2;
+                btVector3 direction(1, 0, 0);
+                float engine = 0;
+                btVector3 f_braking = -direction * braking;
+
+                btVector3 velocity(0, 0, 0);
+                btScalar speed = std::sqrt(velocity.getX()*velocity.getX()+
+                                           velocity.getZ()*velocity.getZ());
+                const btScalar drag = 1.15f; //drag coefficient for a short cylinder(wheel)
+                btVector3 f_drag = -drag * velocity * speed;
+
+                const btScalar rolling_resistance = 30 * drag;
+                btVector3 f_rolling_resistance = -rolling_resistance * velocity;
+
+                btVector3 f_longitudinal = f_braking + f_drag + f_rolling_resistance;
+                car->brake();
                 compare_vectors(car->f_longitudinal_, f_longitudinal);
               });
           });
