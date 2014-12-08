@@ -35,8 +35,8 @@ EventListener::EventListener(Ogre::RenderWindow* window) {
 
 void
 EventListener::add_hook(MouseKey key,  std::function<void()> callback) {
-    if(!key_press_triggers[key])
-      key_press_triggers[key] = callback;
+    if(!mouse_triggers_[key])
+      mouse_triggers_[key] = callback;
 }
 
 void
@@ -47,11 +47,11 @@ EventListener::capture(void) {
 
 void
 EventListener::check_events(void) {
-  if(key_press_triggers[key_pressed_]) {
-      key_press_triggers[key_pressed_]();
-      key_pressed_ =  OIS::MB_Button7;
+  if(mouse_triggers_[mouse_key_pressed_]) {
+    mouse_triggers_[mouse_key_pressed_]();
+    mouse_key_pressed_ =  OIS::MB_Button7;
   }
-  }
+}
 
 bool
 EventListener::shutdown() {
@@ -61,7 +61,7 @@ EventListener::shutdown() {
 
 void
 EventListener::clear_hooks() {
-  key_press_triggers.clear();
+  mouse_triggers_.clear();
 }
 
 bool
@@ -83,7 +83,7 @@ EventListener::mousePressed(const OIS::MouseEvent& evt,
                             OIS::MouseButtonID id) {
   x = evt.state.X.abs;
   y = evt.state.Y.abs;
-  key_pressed_ = id;
+  mouse_key_pressed_ = id;
   return true;
 }
 

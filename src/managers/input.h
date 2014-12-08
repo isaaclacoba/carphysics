@@ -35,13 +35,17 @@ class EventListener: public Ogre::WindowEventListener,
                            public OIS::KeyListener,
                            public OIS::MouseListener {
   typedef OIS::MouseButtonID MouseKey;
+  typedef OIS::KeyCode KeyBoardKey;
+
+  typedef std::vector<KeyBoardKey> KeyCodes;
 
   OIS::InputManager* inputManager_;
   OIS::Mouse* mouse_;
   OIS::Keyboard* keyboard_;
 
-  MouseKey key_pressed_, key_released_;
-  std::map<MouseKey, std::function<void()>> key_press_triggers;
+  MouseKey mouse_key_pressed_, mouse_key_released_;
+
+  std::map<MouseKey, std::function<void()>> mouse_triggers_;
 
  public:
   typedef std::shared_ptr<EventListener> shared;

@@ -17,7 +17,7 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-HEADERDIR=src src/managers src/util
+HEADERDIR=src src/managers src/util src/model
 HEADERFLAGS=$(foreach directory, $(HEADERDIR), -I$(directory))
 
 OBJECTS=src/managers/input.o src/managers/physics.o src/managers/scene.o \

@@ -12,6 +12,8 @@ Game::~Game() {
 
 void
 Game::start() {
+  Car car;
+  car.initialize(physics_, scene_);
   game_loop();
 }
 
