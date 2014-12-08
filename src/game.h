@@ -2,9 +2,9 @@
 #define GAME_H
 #include <memory>
 
+#include "car.h"
+
 #include "input.h"
-#include "physics.h"
-#include "scene.h"
 #include "timer.h"
 
 class Game {

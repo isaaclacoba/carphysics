@@ -23,21 +23,25 @@ class Car {
   const int upIndex = 1;
   const int forwardIndex = 2;
 
-  const float   maxEngineForce = 1000.f;//this should be engine/velocity dependent
+  const float   maxEngineForce = 1000.f;
   const float   maxBreakingForce = 100.f;
 
-  const float   gVehicleSteering = 0.f;
-  const float   steeringIncrement = 0.04f;
-  const float   steeringClamp = 0.3f;
-  const float   wheelRadius = 0.5f;
-  const float   wheelWidth = 0.4f;
-  const float   wheelFriction = 1000;//BT_LARGE_FLOAT;
-  const float   suspensionStiffness = 20.f;
-  const float   suspensionDamping = 2.3f;
-  const float   suspensionCompression = 4.4f;
-  const float   rollInfluence = 0.1f;//1.0f;
+  const float    gVehicleSteering = 0.f;
+  const float    steeringIncrement = 0.04f;
+  const float    steeringClamp = 0.3f;
+  const float    wheelRadius = 0.5f;
+  const float    wheelWidth = 0.4f;
+  const float    wheelFriction = 1000;//BT_LARGE_FLOAT;
+  const float    suspensionStiffness = 20.f;
+  const float    suspensionDamping = 2.3f;
+  const float    suspensionCompression = 4.4f;
+  const float    rollInfluence = 0.1f;//1.0f;
+  const float    connectionHeight = 0.7f;
+  const float    CUBE_HALF_EXTENTS = 1;
+  const btScalar suspensionRestLength = btScalar(0.6);
 
-  const btScalar suspensionRestLength = 0.6f;
+  const btVector3 wheelDirectionCS0 = btVector3(0,-1,0);
+  const btVector3 wheelAxleCS = btVector3(-1,0,0);
 
   float   gEngineForce = 0.f;
   float   gBreakingForce = 0.f;

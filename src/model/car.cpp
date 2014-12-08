@@ -49,20 +49,22 @@ Car::initialize(Physics::shared physics, Scene::shared scene) {
 
    tr.setOrigin(btVector3(0,0.f,0));
    chassis_node_ = scene->create_node("chassis_node");
-  chassis_entity_ = scene->create_entity("chassis_entity", "car.mesh");
+   chassis_entity_ = scene->create_entity("chassis_entity",
+                                          "Frank_body.mesh");
 
-   m_carChassis =  physics->create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
-                                                          btVector3(0, 1, 0)),
-                                              chassis_node_, compound, 800);
+  m_carChassis =  physics->
+    create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
+                                  btVector3(0, 1, 0)),
+                      chassis_node_, compound, 800);
    m_carChassis->setDamping(0.2,0.2);
 
    m_wheelShape = new btCylinderShapeX(btVector3(wheelWidth,wheelRadius,wheelRadius));
-
-
+   bool isFrontWheel = true;
    btVector3 connectionPointCS0(CUBE_HALF_EXTENTS-(0.3*wheelWidth),
                                 connectionHeight,2*CUBE_HALF_EXTENTS-wheelRadius);
-   m_vehicle->addWheel(connectionPointCS0,wheelDirectionCS0,
-                       wheelAxleCS,suspensionRestLength,wheelRadius,m_tuning,isFrontWheel);
+   m_vehicle->addWheel(connectionPointCS0, wheelDirectionCS0,
+                       wheelAxleCS,suspensionRestLength,wheelRadius,
+                       m_tuning, isFrontWheel);
 
    connectionPointCS0 = btVector3(-CUBE_HALF_EXTENTS+(0.3*wheelWidth),connectionHeight,
                                   2*CUBE_HALF_EXTENTS-wheelRadius);
