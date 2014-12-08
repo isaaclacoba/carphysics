@@ -12,8 +12,8 @@ Game::~Game() {
 
 void
 Game::start() {
-  Car car;
-  car.initialize(physics_, scene_);
+  create_ground();
+  create_car();
   game_loop();
 }
 
@@ -31,4 +31,19 @@ Game::game_loop() {
       delta_time = 0.f;
     }
   }
+}
+
+void
+Game::create_ground() {
+  scene_->create_ground();
+  Ogre::SceneNode* ground = scene_->get_node("ground");
+  btCollisionShape* groundShape = new btBoxShape(btVector3(50,3,50));
+  physics_->create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
+                                         btVector3(0, 1, 0)),
+                             ground, groundShape, 0);
+}
+void
+Game::create_car() {
+  Car car;
+  car.initialize(physics_, scene_);
 }

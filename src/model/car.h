@@ -52,6 +52,10 @@ public:
   virtual ~Car();
 
   void initialize(Physics::shared physics, Scene::shared scene);
+
+ private:
+  void init_graphic_bodies(Scene::shared scene);
+    void init_physic_bodies(Physics::shared physics);
 };
 
 #endif

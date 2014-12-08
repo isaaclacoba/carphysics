@@ -134,7 +134,7 @@ Scene::create_ground(void) {
       Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
       plane, 100, 100, 20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Z);
 
-  Ogre::SceneNode* ground_node = create_node("ground_node");
+  Ogre::SceneNode* ground_node = create_node("ground");
   Ogre::Entity* ground_entity = create_entity("ground");
   ground_node->attachObject(ground_entity);
   ground_entity->setMaterialName("Ground");
