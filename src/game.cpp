@@ -26,7 +26,7 @@ Game::game_loop() {
     if(delta_time >= 0.017) {
       input_->capture();
       input_->check_events();
-      physics_->stepSimulation(delta_time, 2);
+      physics_->step_simulation(delta_time, 2);
       scene_->render_one_frame();
       delta_time = 0.f;
     }

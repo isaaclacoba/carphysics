@@ -26,7 +26,7 @@ src/util/timer.o src/util/motionstate.o src/game.o src/model/car.o
 CXX=g++ -std=c++11
 CXXFLAGS = -Wall -ggdb $(HEADERFLAGS) \
  $(shell pkg-config --cflags OGRE OIS bullet)
-LDLIBS = -lboost_system $(shell pkg-config --libs-only-l OGRE OIS bullet)
+LDLIBS = $(shell pkg-config --libs-only-l OGRE OIS bullet)
 
 all: src/main
 

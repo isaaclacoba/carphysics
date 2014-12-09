@@ -1,7 +1,5 @@
 #ifndef CAR_H
 #define CAR_H
-#include <OgreEntity.h>
-
 #include "physics.h"
 #include "scene.h"
 
@@ -55,7 +53,10 @@ public:
 
  private:
   void init_graphic_bodies(Scene::shared scene);
-    void init_physic_bodies(Physics::shared physics);
+  void init_physic_bodies(Physics::shared physics);
+  void init_raycast_car(Physics::shared physics);
+  void add_wheel(bool is_front, btVector3 connection_point);
+  void configure_wheels();
 };
 
 #endif
