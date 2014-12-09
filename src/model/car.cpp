@@ -19,44 +19,23 @@ Car::initialize(Physics::shared physics, Scene::shared scene) {
   init_graphic_bodies(scene);
   init_physic_bodies(physics);
 
-   m_wheelShape = new btCylinderShapeX(btVector3(wheelWidth,wheelRadius,wheelRadius));
-   bool isFrontWheel = true;
-   btVector3 connectionPointCS0(CUBE_HALF_EXTENTS-(0.3*wheelWidth),
-                                connectionHeight,
-                                2*CUBE_HALF_EXTENTS-wheelRadius);
+  init_raycast_car(physics);
 
-   m_vehicle->addWheel(connectionPointCS0, wheelDirectionCS0,
-                       wheelAxleCS,suspensionRestLength,wheelRadius,
-                       m_tuning, isFrontWheel);
+  m_wheelShape = new btCylinderShapeX(btVector3(wheelWidth,wheelRadius,wheelRadius));
 
-   connectionPointCS0 = btVector3(-CUBE_HALF_EXTENTS+(0.3*wheelWidth),
-                                  connectionHeight,
-                                  2*CUBE_HALF_EXTENTS-wheelRadius);
-   m_vehicle->addWheel(connectionPointCS0,wheelDirectionCS0,wheelAxleCS,
-                       suspensionRestLength,wheelRadius,
-                       m_tuning,isFrontWheel);
+  add_wheel(true, btVector3(CUBE_HALF_EXTENTS-(0.3*wheelWidth), connectionHeight,
+                            2*CUBE_HALF_EXTENTS-wheelRadius));
 
-   connectionPointCS0 = btVector3(-CUBE_HALF_EXTENTS+(0.3*wheelWidth),
-                                  connectionHeight,
-                                  -2*CUBE_HALF_EXTENTS+wheelRadius);
-    isFrontWheel = false;
-    m_vehicle->addWheel(connectionPointCS0,wheelDirectionCS0,wheelAxleCS,
-                        suspensionRestLength,wheelRadius,m_tuning,isFrontWheel);
+  add_wheel(true, btVector3(-CUBE_HALF_EXTENTS+(0.3*wheelWidth), connectionHeight,
+                            2*CUBE_HALF_EXTENTS-wheelRadius));
 
-    connectionPointCS0 = btVector3(CUBE_HALF_EXTENTS-(0.3*wheelWidth),connectionHeight,
-                                   -2*CUBE_HALF_EXTENTS+wheelRadius);
-    m_vehicle->addWheel(connectionPointCS0,wheelDirectionCS0,wheelAxleCS,
-                        suspensionRestLength,wheelRadius,
-                        m_tuning,isFrontWheel);
 
-    for (int i=0;i<m_vehicle->getNumWheels();i++) {
-      btWheelInfo& wheel = m_vehicle->getWheelInfo(i);
-      wheel.m_suspensionStiffness = suspensionStiffness;
-      wheel.m_wheelsDampingRelaxation = suspensionDamping;
-      wheel.m_wheelsDampingCompression = suspensionCompression;
-      wheel.m_frictionSlip = wheelFriction;
-      wheel.m_rollInfluence = rollInfluence;
-    }
+  add_wheel(false, btVector3(-CUBE_HALF_EXTENTS+(0.3*wheelWidth), connectionHeight,
+                             -2*CUBE_HALF_EXTENTS+wheelRadius));
+
+  add_wheel(false, btVector3(CUBE_HALF_EXTENTS-(0.3*wheelWidth),connectionHeight,
+                             -2*CUBE_HALF_EXTENTS+wheelRadius));
+  configure_wheels();
 }
 
 void
@@ -85,5 +64,34 @@ Car::init_physic_bodies(Physics::shared physics) {
     create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
                                   btVector3(0, 1, 0)),
                       chassis_node_, compound, 800);
-   m_carChassis->setDamping(0.2,0.2);
+  m_carChassis->setDamping(0.2,0.2);
+  m_carChassis->setActivationState(DISABLE_DEACTIVATION);
+
+}
+
+void
+Car::init_raycast_car(Physics::shared physics) {
+  m_vehicleRayCaster = new btDefaultVehicleRaycaster(physics->dynamicsWorld_);
+  m_vehicle = new btRaycastVehicle(m_tuning, m_carChassis, m_vehicleRayCaster);
+
+  physics->dynamicsWorld_->addVehicle(m_vehicle);
+}
+
+void
+Car::add_wheel(bool is_front, btVector3 connection_point) {
+  m_vehicle->addWheel(connection_point, wheelDirectionCS0,
+                      wheelAxleCS,suspensionRestLength,wheelRadius,
+                      m_tuning, is_front);
+}
+
+void
+Car::configure_wheels(){
+  for (int i=0;i<m_vehicle->getNumWheels();i++) {
+    btWheelInfo& wheel = m_vehicle->getWheelInfo(i);
+    wheel.m_suspensionStiffness = suspensionStiffness;
+    wheel.m_wheelsDampingRelaxation = suspensionDamping;
+    wheel.m_wheelsDampingCompression = suspensionCompression;
+    wheel.m_frictionSlip = wheelFriction;
+    wheel.m_rollInfluence = rollInfluence;
+  }
 }

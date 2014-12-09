@@ -32,10 +32,10 @@ class Physics {
   btDefaultCollisionConfiguration* collisionConfiguration_;
   btCollisionDispatcher* dispatcher_;
 
-  btDiscreteDynamicsWorld* dynamicsWorld_;
 
  public:
   typedef std::shared_ptr<Physics> shared;
+  btDiscreteDynamicsWorld* dynamicsWorld_;
 
   Physics();
   virtual ~Physics();
@@ -45,7 +45,7 @@ class Physics {
                                  btScalar mass);
   btCollisionShape* create_shape(btVector3 halfExtent);
 
-  void stepSimulation(float deltaT, int maxSubSteps);
+  void step_simulation(float deltaT, int maxSubSteps);
 };
 
 #endif

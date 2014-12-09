@@ -51,6 +51,6 @@ Physics::create_shape(btVector3 halfExtent){
 }
 
 void
-Physics::stepSimulation(float deltaT, int maxSubSteps) {
+Physics::step_simulation(float deltaT, int maxSubSteps) {
   dynamicsWorld_->stepSimulation(deltaT, maxSubSteps);
 }
