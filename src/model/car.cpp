@@ -21,20 +21,18 @@ Car::initialize(Physics::shared physics, Scene::shared scene) {
 
   init_raycast_car(physics);
 
-  // m_wheelShape = new btCylinderShapeX(btVector3(wheelWidth,wheelRadius,wheelRadius));
+  add_wheel(true, btVector3(car_dimensions_.getX()-(0.3*wheelWidth), connectionHeight,
+                            car_dimensions_.getZ()-wheelRadius));
 
-  add_wheel(true, btVector3(CUBE_HALF_EXTENTS-(0.3*wheelWidth), connectionHeight,
-                            2*CUBE_HALF_EXTENTS-wheelRadius));
-
-  add_wheel(true, btVector3(-CUBE_HALF_EXTENTS+(0.3*wheelWidth), connectionHeight,
-                            2*CUBE_HALF_EXTENTS-wheelRadius));
+  add_wheel(true, btVector3(-car_dimensions_.getX()+(0.3*wheelWidth), connectionHeight,
+                            car_dimensions_.getZ()-wheelRadius));
 
 
-  add_wheel(false, btVector3(-CUBE_HALF_EXTENTS+(0.3*wheelWidth), connectionHeight,
-                             -2*CUBE_HALF_EXTENTS+wheelRadius));
+  add_wheel(false, btVector3(-car_dimensions_.getX()+(0.3*wheelWidth), connectionHeight,
+                             -car_dimensions_.getZ()+wheelRadius));
 
-  add_wheel(false, btVector3(CUBE_HALF_EXTENTS-(0.3*wheelWidth),connectionHeight,
-                             -2*CUBE_HALF_EXTENTS+wheelRadius));
+  add_wheel(false, btVector3(car_dimensions_.getX()-(0.3*wheelWidth),connectionHeight,
+                             -car_dimensions_.getZ()+wheelRadius));
   configure_wheels();
 }
 
@@ -51,10 +49,9 @@ Car::init_physic_bodies(Physics::shared physics) {
   btTransform tr;
   tr.setIdentity();
 
-  btCollisionShape* chassisShape = physics->create_shape(btVector3(1.f,0.5f,2.f));
-
   btVector3 origin = btVector3(0,1,0);
-  btCompoundShape* compound = physics->create_compound_shape(origin, chassisShape);
+  btCompoundShape* compound = physics->
+    create_compound_shape(origin, physics->create_shape(car_dimensions_));
   m_collisionShapes.push_back(compound);
 
   tr.setOrigin(btVector3(0,0.f,0));

@@ -50,7 +50,7 @@ Physics::create_shape(btVector3 halfExtent){
   return new btBoxShape(halfExtent);
 }
 
-btCollisionShape*
+btCompoundShape*
 Physics::create_compound_shape(btVector3 origin, btCollisionShape* child){
   btCompoundShape* compound = new btCompoundShape();
   btTransform localTrans;
