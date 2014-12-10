@@ -36,14 +36,17 @@ Game::game_loop() {
 void
 Game::create_ground() {
   scene_->create_ground();
-  Ogre::SceneNode* ground = scene_->get_node("ground");
-  btCollisionShape* groundShape = new btBoxShape(btVector3(50,3,50));
-  physics_->create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
+
+  btCollisionShape* groundShape = physics_->create_shape(btVector3(50, 1, 50));
+  btRigidBody* plane_body = physics_->create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
                                          btVector3(0, 1, 0)),
-                             ground, groundShape, 0);
+                              scene_->get_node("ground"), groundShape, 0);
+  plane_body->setRestitution(0.2);
+  plane_body->setFriction(0.5f);
 }
+
 void
 Game::create_car() {
-  Car car;
-  car.initialize(physics_, scene_);
+  car = std::make_shared<Car>();
+  car->initialize(physics_, scene_);
 }

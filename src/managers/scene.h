@@ -34,6 +34,7 @@
 
 
 class Scene {
+  const std::string window_title = "Car Physics";
 
   Ogre::Root* root_;
   Ogre::SceneManager* sceneManager_;

@@ -50,6 +50,18 @@ Physics::create_shape(btVector3 halfExtent){
   return new btBoxShape(halfExtent);
 }
 
+btCollisionShape*
+Physics::create_compound_shape(btVector3 origin, btCollisionShape* child){
+  btCompoundShape* compound = new btCompoundShape();
+  btTransform localTrans;
+  localTrans.setIdentity();
+  localTrans.setOrigin(origin);
+
+  compound->addChildShape(localTrans, child);
+  return compound;
+}
+
+
 void
 Physics::step_simulation(float deltaT, int maxSubSteps) {
   dynamicsWorld_->stepSimulation(deltaT, maxSubSteps);

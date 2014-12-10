@@ -9,10 +9,12 @@
 
 class Game {
   Timer timer_;
+  Car::shared car;
 
   Scene::shared scene_;
   EventListener::shared input_;
   Physics::shared physics_;
+
 
 public:
   Game();
