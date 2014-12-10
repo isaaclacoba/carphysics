@@ -35,7 +35,7 @@ class Car {
   const float    suspensionCompression = 4.4f;
   const float    rollInfluence = 0.1f;//1.0f;
   const float    connectionHeight = 0.7f;
-  const float    CUBE_HALF_EXTENTS = 1;
+  const btVector3 car_dimensions_ = btVector3(1, 0.5f, 2);
   const btScalar suspensionRestLength = btScalar(0.6);
 
   const btVector3 wheelDirectionCS0 = btVector3(0,-1,0);

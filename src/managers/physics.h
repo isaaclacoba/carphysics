@@ -44,7 +44,7 @@ class Physics {
                                  btCollisionShape* shape,
                                  btScalar mass);
   btCollisionShape* create_shape(btVector3 halfExtent);
-
+  btCompoundShape* create_compound_shape(btVector3 origin, btCollisionShape* child);
   void step_simulation(float deltaT, int maxSubSteps);
 };
 

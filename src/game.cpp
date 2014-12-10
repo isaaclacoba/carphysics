@@ -47,6 +47,6 @@ Game::create_ground() {
 
 void
 Game::create_car() {
-  car = std::make_shared<Car>();
-  car->initialize(physics_, scene_);
+  car_ = std::make_shared<Car>();
+  car_->initialize(physics_, scene_);
 }

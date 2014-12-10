@@ -9,7 +9,7 @@
 
 class Game {
   Timer timer_;
-  Car::shared car;
+  Car::shared car_;
 
   Scene::shared scene_;
   EventListener::shared input_;
