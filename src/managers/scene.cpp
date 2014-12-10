@@ -26,7 +26,7 @@ Scene::Scene() {
   if (not root_->restoreConfig() )
     root_->showConfigDialog();
 
-  window_ = root_->initialise(true, "ProyectIronman");
+  window_ = root_->initialise(true, window_title);
 
   load_resources();
 
@@ -112,11 +112,12 @@ Scene::create_light() {
 void
 Scene::create_camera(Ogre::RenderWindow* window) {
   Ogre::SceneNode* camera_node = create_node("camera_node");
+  add_child("", "camera_node");
   camera_ = sceneManager_->createCamera("PlayerCamera");
-  camera_->setPosition(Ogre::Vector3(0.5 ,2,20));
+  camera_->setPosition(Ogre::Vector3(0 , 20,20));
   camera_->lookAt(Ogre::Vector3(0, 0, 0));
   camera_->setNearClipDistance(5);
-  camera_->setFarClipDistance(1000);
+  camera_->setFarClipDistance(300);
 
   Ogre::Viewport* viewport = window->addViewport(camera_);
   viewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
@@ -132,9 +133,10 @@ Scene::create_ground(void) {
 
   Ogre::MeshManager::getSingleton().createPlane("ground",
       Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-      plane, 100, 100, 20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Z);
+      plane, 50, 50, 20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Z);
 
   Ogre::SceneNode* ground_node = create_node("ground");
+  add_child("", "ground");
   Ogre::Entity* ground_entity = create_entity("ground");
   ground_node->attachObject(ground_entity);
   ground_entity->setMaterialName("Ground");

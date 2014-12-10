@@ -45,7 +45,9 @@ class Car {
   float   gBreakingForce = 0.f;
 
 
-public:
+ public:
+  typedef std::shared_ptr<Car> shared;
+
   Car();
   virtual ~Car();
 

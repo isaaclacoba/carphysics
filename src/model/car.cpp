@@ -21,7 +21,7 @@ Car::initialize(Physics::shared physics, Scene::shared scene) {
 
   init_raycast_car(physics);
 
-  m_wheelShape = new btCylinderShapeX(btVector3(wheelWidth,wheelRadius,wheelRadius));
+  // m_wheelShape = new btCylinderShapeX(btVector3(wheelWidth,wheelRadius,wheelRadius));
 
   add_wheel(true, btVector3(CUBE_HALF_EXTENTS-(0.3*wheelWidth), connectionHeight,
                             2*CUBE_HALF_EXTENTS-wheelRadius));
@@ -41,6 +41,7 @@ Car::initialize(Physics::shared physics, Scene::shared scene) {
 void
 Car::init_graphic_bodies(Scene::shared scene) {
   chassis_node_ = scene->create_node("chassis_node");
+  scene->add_child("", "chassis_node");
   chassis_entity_ = scene->create_entity("chassis_entity",
                                          "Frank_body.mesh");
 }
@@ -50,23 +51,20 @@ Car::init_physic_bodies(Physics::shared physics) {
   btTransform tr;
   tr.setIdentity();
 
-  btCollisionShape* chassisShape = new btBoxShape(btVector3(1.f,0.5f,2.f));
-  btCompoundShape* compound = new btCompoundShape();
+  btCollisionShape* chassisShape = physics->create_shape(btVector3(1.f,0.5f,2.f));
+
+  btVector3 origin = btVector3(0,1,0);
+  btCompoundShape* compound = physics->create_compound_shape(origin, chassisShape);
   m_collisionShapes.push_back(compound);
-  btTransform localTrans;
-  localTrans.setIdentity();
-  //localTrans effectively shifts the center of mass with respect to the chassis
-  localTrans.setOrigin(btVector3(0,1,0));
-  compound->addChildShape(localTrans, chassisShape);
 
   tr.setOrigin(btVector3(0,0.f,0));
+
   m_carChassis =  physics->
     create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
-                                  btVector3(0, 1, 0)),
+                                  btVector3(0, 20, 0)),
                       chassis_node_, compound, 800);
   m_carChassis->setDamping(0.2,0.2);
   m_carChassis->setActivationState(DISABLE_DEACTIVATION);
-
 }
 
 void
