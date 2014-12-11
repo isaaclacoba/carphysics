@@ -14,8 +14,8 @@ class Car {
   btCollisionShape*       m_wheelShape;
   Ogre::SceneNode* chassis_node_;
   Ogre::Entity* chassis_entity_;
-  std::vector<Ogre::SceneNode*> wheels_nodes;
-  std::vector<Ogre::Entity*> wheels_entities;
+  std::vector<Ogre::SceneNode*> wheels_nodes_;
+  std::vector<Ogre::Entity*> wheels_entities_;
 
   const int rightIndex = 0;
   const int upIndex = 1;
@@ -57,7 +57,8 @@ class Car {
   void init_graphic_bodies(Scene::shared scene);
   void init_physic_bodies(Physics::shared physics);
   void init_raycast_car(Physics::shared physics);
-  void add_wheel(bool is_front, btVector3 connection_point);
+  void add_graphic_wheel(Scene::shared scene, std::string name);
+  void add_physic_wheel(bool is_front, btVector3 connection_point);
   void configure_wheels();
 };
 
