@@ -42,6 +42,7 @@ Car::init_graphic_bodies(Scene::shared scene) {
   scene->add_child("", "chassis_node");
   chassis_entity_ = scene->create_entity("chassis_entity",
                                          "Frank_body.mesh");
+  scene->attach(chassis_node_,chassis_entity_);
 }
 
 void
