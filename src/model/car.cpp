@@ -21,18 +21,22 @@ Car::initialize(Physics::shared physics, Scene::shared scene) {
 
   init_raycast_car(physics);
 
-  add_wheel(true, btVector3(car_dimensions_.getX()-(0.3*wheelWidth), connectionHeight,
-                            car_dimensions_.getZ()-wheelRadius));
+  add_physic_wheel(true, btVector3(car_dimensions_.getX()-(0.3*wheelWidth),
+                                   connectionHeight,
+                                   car_dimensions_.getZ()-wheelRadius));
 
-  add_wheel(true, btVector3(-car_dimensions_.getX()+(0.3*wheelWidth), connectionHeight,
-                            car_dimensions_.getZ()-wheelRadius));
+  add_physic_wheel(true, btVector3(-car_dimensions_.getX()+(0.3*wheelWidth),
+                                   connectionHeight,
+                                   car_dimensions_.getZ()-wheelRadius));
 
 
-  add_wheel(false, btVector3(-car_dimensions_.getX()+(0.3*wheelWidth), connectionHeight,
-                             -car_dimensions_.getZ()+wheelRadius));
+  add_physic_wheel(false, btVector3(-car_dimensions_.getX()+(0.3*wheelWidth),
+                                    connectionHeight,
+                                    -car_dimensions_.getZ()+wheelRadius));
 
-  add_wheel(false, btVector3(car_dimensions_.getX()-(0.3*wheelWidth),connectionHeight,
-                             -car_dimensions_.getZ()+wheelRadius));
+  add_physic_wheel(false, btVector3(car_dimensions_.getX()-(0.3*wheelWidth),
+                                    connectionHeight,
+                                    -car_dimensions_.getZ()+wheelRadius));
   configure_wheels();
 }
 
@@ -43,6 +47,15 @@ Car::init_graphic_bodies(Scene::shared scene) {
   chassis_entity_ = scene->create_entity("chassis_entity",
                                          "Frank_body.mesh");
   scene->attach(chassis_node_,chassis_entity_);
+
+  for (int i = 0; i < 4; ++i) {
+    add_graphic_wheel(scene, "wheel" + i);
+  }
+
+  wheels_nodes_[0]->translate( 1,  -1,  1);
+  wheels_nodes_[1]->translate(-1,  -1,  1);
+  wheels_nodes_[2]->translate( 1,  -1, -1);
+  wheels_nodes_[3]->translate(-1,  -1, -1);
 }
 
 void
@@ -61,7 +74,7 @@ Car::init_physic_bodies(Physics::shared physics) {
     create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
                                   btVector3(0, 20, 0)),
                       chassis_node_, compound, 800);
-  m_carChassis->setDamping(0.2,0.2);
+  // m_carChassis->setDamping(0.2,0.2);
   m_carChassis->setActivationState(DISABLE_DEACTIVATION);
 }
 
@@ -74,7 +87,20 @@ Car::init_raycast_car(Physics::shared physics) {
 }
 
 void
-Car::add_wheel(bool is_front, btVector3 connection_point) {
+Car::add_graphic_wheel(Scene::shared scene, std::string name) {
+  wheels_nodes_.push_back(scene->create_node(name));
+
+  std::string parent = "chassis_node";
+  scene->add_child(parent, name);
+
+  std::string mesh = "Frank_wheel.mesh";
+  wheels_entities_.push_back(scene->create_entity(name, mesh));
+
+  scene->attach(wheels_nodes_.back(), wheels_entities_.back());
+}
+
+void
+Car::add_physic_wheel(bool is_front, btVector3 connection_point) {
   m_vehicle->addWheel(connection_point, wheelDirectionCS0,
                       wheelAxleCS,suspensionRestLength,wheelRadius,
                       m_tuning, is_front);
