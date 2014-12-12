@@ -80,10 +80,10 @@ Car::init_physic_bodies(Physics::shared physics) {
 
 void
 Car::init_raycast_car(Physics::shared physics) {
-  m_vehicleRayCaster = new btDefaultVehicleRaycaster(physics->dynamicsWorld_);
+  m_vehicleRayCaster = new btDefaultVehicleRaycaster(physics->dynamics_world_);
   m_vehicle = new btRaycastVehicle(m_tuning, m_carChassis, m_vehicleRayCaster);
 
-  physics->dynamicsWorld_->addVehicle(m_vehicle);
+  physics->dynamics_world_->addVehicle(m_vehicle);
 }
 
 void

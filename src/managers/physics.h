@@ -19,10 +19,10 @@
 #define PHYSICS_H
 #include "motionstate.h"
 
-#include <memory>
-
 #include <OgreSceneNode.h>
 #include <btBulletDynamicsCommon.h>
+
+#include "bulletimporter.h"
 
 class Physics {
   const btVector3 gravity_ = btVector3(0, -9.8, 0);
@@ -32,10 +32,11 @@ class Physics {
   btDefaultCollisionConfiguration* collisionConfiguration_;
   btCollisionDispatcher* dispatcher_;
 
+  BulletImporter::shared file_loader_;
 
  public:
   typedef std::shared_ptr<Physics> shared;
-  btDiscreteDynamicsWorld* dynamicsWorld_;
+  btDiscreteDynamicsWorld* dynamics_world_;
 
   Physics();
   virtual ~Physics();
@@ -46,6 +47,9 @@ class Physics {
   btCollisionShape* create_shape(btVector3 halfExtent);
   btCompoundShape* create_compound_shape(btVector3 origin, btCollisionShape* child);
   void step_simulation(float deltaT, int maxSubSteps);
+
+  void load_mesh(std::string file);
+
 };
 
 #endif

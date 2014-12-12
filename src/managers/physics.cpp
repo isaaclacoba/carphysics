@@ -11,15 +11,17 @@ Physics::Physics() {
     collisionConfiguration_ = new btDefaultCollisionConfiguration();
     dispatcher_ = new btCollisionDispatcher(collisionConfiguration_);
 
-    dynamicsWorld_ = new btDiscreteDynamicsWorld(dispatcher_,
+    dynamics_world_ = new btDiscreteDynamicsWorld(dispatcher_,
                         broadphase_, solver_, collisionConfiguration_);
-    dynamicsWorld_->setGravity(gravity_);
+    dynamics_world_->setGravity(gravity_);
+
+    file_loader_ = std::make_shared<BulletImporter>(dynamics_world_);
   }
 
 
 
 Physics::~Physics() {
-  delete dynamicsWorld_;
+  delete dynamics_world_;
   delete dispatcher_;
   delete collisionConfiguration_;
   delete solver_;
@@ -40,7 +42,7 @@ Physics::create_rigid_body(const btTransform &worldTransform,
     rigidBodyCI(mass, motionState, shape, inertia);
 
   btRigidBody* rigidBody = new btRigidBody(rigidBodyCI);
-  dynamicsWorld_->addRigidBody(rigidBody);
+  dynamics_world_->addRigidBody(rigidBody);
 
   return rigidBody;
 }
@@ -64,5 +66,10 @@ Physics::create_compound_shape(btVector3 origin, btCollisionShape* child){
 
 void
 Physics::step_simulation(float deltaT, int maxSubSteps) {
-  dynamicsWorld_->stepSimulation(deltaT, maxSubSteps);
+  dynamics_world_->stepSimulation(deltaT, maxSubSteps);
+}
+
+void
+Physics::load_mesh(std::string file) {
+  file_loader_->load(file);
 }
