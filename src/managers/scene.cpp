@@ -137,7 +137,7 @@ Scene::create_ground(void) {
 
   Ogre::SceneNode* ground_node = create_node("ground");
   add_child("", "ground");
-  Ogre::Entity* ground_entity = create_entity("ground");
+  Ogre::Entity* ground_entity = create_entity("ground", "camino00UV.mesh");
   ground_node->attachObject(ground_entity);
   ground_entity->setMaterialName("Ground");
 

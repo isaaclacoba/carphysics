@@ -31,13 +31,13 @@
 #include <OIS/OISKeyboard.h>
 #include <OIS/OISMouse.h>
 
+enum class EventType{game_event, menu_event};
 class EventListener: public Ogre::WindowEventListener,
                            public OIS::KeyListener,
                            public OIS::MouseListener {
+
   typedef OIS::MouseButtonID MouseKey;
   typedef OIS::KeyCode KeyBoardKey;
-
-  typedef std::vector<KeyBoardKey> KeyCodes;
 
   OIS::InputManager* inputManager_;
   OIS::Mouse* mouse_;
@@ -49,6 +49,8 @@ class EventListener: public Ogre::WindowEventListener,
 
  public:
   typedef std::shared_ptr<EventListener> shared;
+  typedef std::vector<KeyBoardKey> KeyCodes;
+
   float x, y;
   bool exit_;
 
@@ -58,6 +60,7 @@ class EventListener: public Ogre::WindowEventListener,
   void check_events();
 
   void add_hook(MouseKey key,std::function<void()> callback);
+  void add_hook(KeyCodes keystroke, EventType type, std::function<void()> callback);
   void clear_hooks();
 
   bool keyPressed(const OIS::KeyEvent& arg);
@@ -70,7 +73,10 @@ class EventListener: public Ogre::WindowEventListener,
 
   bool shutdown(void);
 
-private:
+ private:
+  KeyCodes keys_pressed_, keys_released_;
+  std::map<KeyCodes, std::function<void()>> game_triggers_, menu_triggers_;
+
   void create_input_manager(Ogre::RenderWindow* window);
 
 };
