@@ -60,6 +60,8 @@ EventListener::capture(void) {
 
 void
 EventListener::check_events(void) {
+  for(auto key: events_)
+    std::cout << key.first << std::endl;
 
   if(mouse_triggers_[mouse_key_pressed_]) {
     mouse_triggers_[mouse_key_pressed_]();
@@ -68,11 +70,12 @@ EventListener::check_events(void) {
 
   if(menu_triggers_[events_]){
     menu_triggers_[events_]();
-    events_.clear();
   }
 
   if(game_triggers_[events_])
     game_triggers_[events_]();
+  else
+    events_.clear();
 
 
 }

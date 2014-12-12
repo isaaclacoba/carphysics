@@ -25,12 +25,13 @@ Game::game_loop() {
 
   while(!input_->exit_) {
     delta_time += timer_.get_delta_time();
+    input_->capture();
+    input_->check_events();
     if(delta_time >= 0.017) {
-      input_->capture();
-      input_->check_events();
+      car_->update();
       physics_->step_simulation(delta_time, 2);
-      scene_->render_one_frame();
-      delta_time = 0.f;
+        scene_->render_one_frame();
+        delta_time = 0.f;
     }
   }
 }
@@ -57,4 +58,6 @@ void
 Game::register_hooks() {
   input_->add_hook({std::make_pair(OIS::KC_ESCAPE, true)}, EventType::menu,
                    std::bind(&EventListener::shutdown, input_));
+  input_->add_hook({std::make_pair(OIS::KC_W, true)}, EventType::game,
+                   std::bind(&Car::accelerate, car_));
 }
