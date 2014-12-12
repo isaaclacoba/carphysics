@@ -26,6 +26,7 @@ private:
   void game_loop();
   void create_ground();
   void create_car();
+  void register_hooks();
 };
 
 

@@ -1,5 +1,5 @@
 // -*- coding:utf-8; tab-width:4; mode:cpp -*-
-// Minesweeper author: Isaac Lacoba Molina
+// Tinman author: Isaac Lacoba Molina
 // Copyright (C) 2014  ISAAC LACOBA MOLINA
 //
 //     This program is free software: you can redistribute it and/or modify

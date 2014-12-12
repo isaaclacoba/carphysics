@@ -1,6 +1,6 @@
 // -*- coding:utf-8; tab-width:4; mode:cpp -*-
 // Copyright (C) 2014  ISAAC LACOBA MOLINA
-// Minesweeper author: Isaac Lacoba Molina
+// Tinman author: Isaac Lacoba Molina
 //
 //     This program is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
@@ -35,12 +35,13 @@ EventListener::EventListener(Ogre::RenderWindow* window) {
 }
 
 void
-EventListener::add_hook(EventListener::KeyCodes keystroke,
-         EventType type, std::function<void()> callback) {
-  if(type == EventType::game_event
-     && game_triggers_[keystroke])
+EventListener::add_hook(EventListener::KeyEvents keystroke,
+                        EventType type, std::function<void()> callback) {
+
+  if(type == EventType::game
+     && !game_triggers_[keystroke])
       game_triggers_[keystroke] = callback;
-  else if(menu_triggers_[keystroke]){
+  else if(!menu_triggers_[keystroke]) {
       menu_triggers_[keystroke] = callback;
   }
 }
@@ -59,23 +60,27 @@ EventListener::capture(void) {
 
 void
 EventListener::check_events(void) {
+
   if(mouse_triggers_[mouse_key_pressed_]) {
     mouse_triggers_[mouse_key_pressed_]();
-    mouse_key_pressed_ =  OIS::MB_Button7;
+    mouse_key_pressed_ =  std::make_pair(OIS::MB_Button7, false);
   }
 
-  if(menu_triggers_[keys_pressed_]){
-    menu_triggers_[keys_pressed_]();
-    keys_pressed_.clear();
+  if(menu_triggers_[events_]){
+    menu_triggers_[events_]();
+    events_.clear();
   }
-  else if(game_triggers_[keys_pressed_])
-    game_triggers_[keys_pressed_]();
+
+  if(game_triggers_[events_])
+    game_triggers_[events_]();
 
 
 }
 
 bool
 EventListener::shutdown() {
+    std::cout << __func__ << " "
+            << std::endl;
     exit_ = true;
     return true;
 }
@@ -87,12 +92,20 @@ EventListener::clear_hooks() {
 
 bool
 EventListener::keyPressed(const OIS::KeyEvent& arg) {
+  std::cout << __func__ << " "
+            << arg.key << std::endl;
+  remove_key_from_buffer(std::make_pair(arg.key, false));
+  events_.push_back(std::make_pair(arg.key, true));
   return true;
 }
 
 bool
 EventListener::keyReleased(const OIS::KeyEvent& arg) {
-    return true;
+  std::cout << __func__ << " "
+            << arg.key << std::endl;
+  remove_key_from_buffer(std::make_pair(arg.key, true));
+  events_.push_back(std::make_pair(arg.key, false));
+   return true;
 }
 
 bool
@@ -104,7 +117,7 @@ EventListener::mousePressed(const OIS::MouseEvent& evt,
                             OIS::MouseButtonID id) {
   x = evt.state.X.abs;
   y = evt.state.Y.abs;
-  mouse_key_pressed_ = id;
+  mouse_key_pressed_ = std::make_pair(id, true);
   return true;
 }
 
@@ -133,4 +146,13 @@ EventListener::create_input_manager(Ogre::RenderWindow* window) {
     parameters.insert(parameter("XAutoRepeatOn", "false"));
 
     inputManager_ = OIS::InputManager::createInputSystem(parameters);
+}
+
+void
+EventListener::remove_key_from_buffer(KeyBoardKey event) {
+    auto keyevent = find (events_.begin(), events_.end(), event);
+    if(keyevent == events_.end())
+      return;
+
+    events_.erase(keyevent);
 }

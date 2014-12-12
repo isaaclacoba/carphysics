@@ -14,6 +14,8 @@ void
 Game::start() {
   create_ground();
   create_car();
+
+  register_hooks();
   game_loop();
 }
 
@@ -49,4 +51,10 @@ void
 Game::create_car() {
   car_ = std::make_shared<Car>();
   car_->initialize(physics_, scene_);
+}
+
+void
+Game::register_hooks() {
+  input_->add_hook({std::make_pair(OIS::KC_ESCAPE, true)}, EventType::menu,
+                   std::bind(&EventListener::shutdown, input_));
 }
