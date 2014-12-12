@@ -36,8 +36,10 @@ class Car {
   const int upIndex = 1;
   const int forwardIndex = 2;
 
-  const float   maxEngineForce = 1000.f;
-  const float   maxBreakingForce = 100.f;
+  const float   f_max_engine_ = 1000.f;
+  const float   f_min_increment_ = 2;
+  const float   f_max_breaking_ = 100.f;
+
 
   const float    gVehicleSteering = 0.f;
   const float    steeringIncrement = 0.04f;
@@ -56,7 +58,10 @@ class Car {
   const btVector3 wheelDirectionCS0 = btVector3(0,-1,0);
   const btVector3 wheelAxleCS = btVector3(-1,0,0);
 
-  float   gEngineForce = 0.f;
+
+  bool accelerating_, braking_, turning_;
+
+  float   f_engine_ = 0.f;
   float   gBreakingForce = 0.f;
 
 
@@ -67,6 +72,10 @@ class Car {
   virtual ~Car();
 
   void initialize(Physics::shared physics, Scene::shared scene);
+  void accelerate();
+  void brake();
+
+  void update();
 
  private:
   void init_graphic_bodies(Scene::shared scene);
@@ -76,6 +85,7 @@ class Car {
   void add_physic_wheel(bool is_front, btVector3 connection_point);
   void configure_wheels();
 
+  void control_speed();
 };
 
 #endif

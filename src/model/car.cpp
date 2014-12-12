@@ -17,7 +17,7 @@
 #include "car.h"
 
 Car::Car() {
-
+  accelerating_ = turning_ = false;
 }
 
 Car::~Car() {
@@ -121,6 +121,7 @@ Car::add_physic_wheel(bool is_front, btVector3 connection_point) {
                       m_tuning, is_front);
 }
 
+
 void
 Car::configure_wheels(){
   for (int i=0;i<m_vehicle->getNumWheels();i++) {
@@ -131,4 +132,31 @@ Car::configure_wheels(){
     wheel.m_frictionSlip = wheelFriction;
     wheel.m_rollInfluence = rollInfluence;
   }
+}
+
+void
+Car::control_speed() {
+   if(!accelerating_)
+      f_engine_ = (f_engine_ < -f_max_engine_) ? -f_max_engine_: f_engine_ - f_min_increment_;
+  }
+
+
+void
+Car::accelerate() {
+  std::cout << __func__ << std::endl;
+  accelerating_ = true;
+  f_engine_ = (f_engine_ >= f_max_engine_) ? f_max_engine_: f_engine_ + f_min_increment_;
+}
+
+void
+Car::brake() {
+  accelerating_ = false;
+  f_engine_ = (f_engine_ < -f_max_engine_) ? -f_max_engine_: f_engine_ - f_min_increment_;
+}
+
+void
+Car::update() {
+  control_speed();
+  m_vehicle->applyEngineForce(f_engine_, 0);
+  m_vehicle->applyEngineForce(f_engine_, 1);
 }
