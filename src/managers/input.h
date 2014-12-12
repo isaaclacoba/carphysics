@@ -1,5 +1,5 @@
 // Copyright (C) 2014  ISAAC LACOBA MOLINA
-// Minesweeper author: Isaac Lacoba Molina
+// Tinman author: Isaac Lacoba Molina
 //
 //     This program is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
@@ -31,13 +31,14 @@
 #include <OIS/OISKeyboard.h>
 #include <OIS/OISMouse.h>
 
-enum class EventType{game_event, menu_event};
+enum class EventType{game, menu};
 class EventListener: public Ogre::WindowEventListener,
-                           public OIS::KeyListener,
-                           public OIS::MouseListener {
+  public OIS::KeyListener,
+  public OIS::MouseListener {
 
-  typedef OIS::MouseButtonID MouseKey;
-  typedef OIS::KeyCode KeyBoardKey;
+  typedef bool OnKeyPressed;
+  typedef std::pair<OIS::MouseButtonID, OnKeyPressed> MouseKey;
+  typedef std::pair<OIS::KeyCode, OnKeyPressed> KeyBoardKey;
 
   OIS::InputManager* inputManager_;
   OIS::Mouse* mouse_;
@@ -49,7 +50,7 @@ class EventListener: public Ogre::WindowEventListener,
 
  public:
   typedef std::shared_ptr<EventListener> shared;
-  typedef std::vector<KeyBoardKey> KeyCodes;
+  typedef std::vector<KeyBoardKey> KeyEvents;
 
   float x, y;
   bool exit_;
@@ -60,7 +61,7 @@ class EventListener: public Ogre::WindowEventListener,
   void check_events();
 
   void add_hook(MouseKey key,std::function<void()> callback);
-  void add_hook(KeyCodes keystroke, EventType type, std::function<void()> callback);
+  void add_hook(KeyEvents keystroke, EventType type, std::function<void()> callback);
   void clear_hooks();
 
   bool keyPressed(const OIS::KeyEvent& arg);
@@ -74,10 +75,11 @@ class EventListener: public Ogre::WindowEventListener,
   bool shutdown(void);
 
  private:
-  KeyCodes keys_pressed_, keys_released_;
-  std::map<KeyCodes, std::function<void()>> game_triggers_, menu_triggers_;
+  KeyEvents events_;
+
+  std::map<KeyEvents, std::function<void()>> game_triggers_, menu_triggers_;
 
   void create_input_manager(Ogre::RenderWindow* window);
-
-};
+  void remove_key_from_buffer(KeyBoardKey event);
+  };
 #endif
