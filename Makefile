@@ -21,7 +21,8 @@ HEADERDIR=src src/managers src/util src/model
 HEADERFLAGS=$(foreach directory, $(HEADERDIR), -I$(directory))
 
 OBJECTS=src/managers/input.o src/managers/physics.o src/managers/scene.o \
-src/util/timer.o src/util/motionstate.o src/game.o src/model/car.o
+src/util/timer.o src/util/motionstate.o  src/util/meshstrider.o src/game.o \
+src/model/car.o
 
 CXX=g++ -std=c++11
 CXXFLAGS = -Wall -ggdb $(HEADERFLAGS) \

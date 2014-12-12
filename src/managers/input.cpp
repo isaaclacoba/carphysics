@@ -20,17 +20,29 @@
 
 EventListener::EventListener(Ogre::RenderWindow* window) {
   x = y = 0;
-
   exit_ = false;
 
   create_input_manager(window);
 
-  keyboard_ = static_cast<OIS::Keyboard*>(inputManager_->createInputObject(OIS::OISKeyboard, true));
-  mouse_ = static_cast<OIS::Mouse*>(inputManager_->createInputObject(OIS::OISMouse, true));
+  keyboard_ = static_cast<OIS::Keyboard*>
+    (inputManager_->createInputObject(OIS::OISKeyboard, true));
+  mouse_ = static_cast<OIS::Mouse*>
+    (inputManager_->createInputObject(OIS::OISMouse, true));
 
   keyboard_->setEventCallback(this);
   mouse_->setEventCallback(this);
   Ogre::WindowEventUtilities::addWindowEventListener(window, this);
+}
+
+void
+EventListener::add_hook(EventListener::KeyCodes keystroke,
+         EventType type, std::function<void()> callback) {
+  if(type == EventType::game_event
+     && game_triggers_[keystroke])
+      game_triggers_[keystroke] = callback;
+  else if(menu_triggers_[keystroke]){
+      menu_triggers_[keystroke] = callback;
+  }
 }
 
 void
@@ -51,6 +63,15 @@ EventListener::check_events(void) {
     mouse_triggers_[mouse_key_pressed_]();
     mouse_key_pressed_ =  OIS::MB_Button7;
   }
+
+  if(menu_triggers_[keys_pressed_]){
+    menu_triggers_[keys_pressed_]();
+    keys_pressed_.clear();
+  }
+  else if(game_triggers_[keys_pressed_])
+    game_triggers_[keys_pressed_]();
+
+
 }
 
 bool
