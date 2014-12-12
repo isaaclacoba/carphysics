@@ -18,6 +18,8 @@
 
 Car::Car() {
   accelerating_ = turning_ = false;
+  f_engine_ = 0.f;
+  f_braking_ = 0.f;
 }
 
 Car::~Car() {
@@ -136,9 +138,8 @@ Car::configure_wheels(){
 
 void
 Car::control_speed() {
-   if(!accelerating_)
-      f_engine_ = (f_engine_ < -f_max_engine_) ? -f_max_engine_: f_engine_ - f_min_increment_;
-  }
+  f_engine_ = (f_engine_ - f_braking_ <= 0) ? 0 : f_engine_ - f_braking_;
+}
 
 
 void
@@ -146,17 +147,35 @@ Car::accelerate() {
   std::cout << __func__ << std::endl;
   accelerating_ = true;
   f_engine_ = (f_engine_ >= f_max_engine_) ? f_max_engine_: f_engine_ + f_min_increment_;
+  f_braking_ = 0;
+}
+
+void
+Car::stop_accelerating() {
+  accelerating_ = false;
+  f_engine_ = (f_engine_ >= f_max_engine_) ? f_max_engine_: f_engine_ - f_min_increment_;
 }
 
 void
 Car::brake() {
   accelerating_ = false;
-  f_engine_ = (f_engine_ < -f_max_engine_) ? -f_max_engine_: f_engine_ - f_min_increment_;
+  braking_ = true;
+  f_braking_ = f_max_braking_;
+    f_engine_ = (f_engine_ - f_braking_ <= 0) ? 0 : f_engine_ - f_braking_;
 }
+
+void
+Car::stop_braking() {
+  std::cout << __func__ << std::endl;
+  braking_ = false;
+  f_braking_ = f_min_increment_;
+}
+
 
 void
 Car::update() {
   control_speed();
+
   m_vehicle->applyEngineForce(f_engine_, 0);
   m_vehicle->applyEngineForce(f_engine_, 1);
 }

@@ -60,4 +60,10 @@ Game::register_hooks() {
                    std::bind(&EventListener::shutdown, input_));
   input_->add_hook({std::make_pair(OIS::KC_W, true)}, EventType::game,
                    std::bind(&Car::accelerate, car_));
+ input_->add_hook({std::make_pair(OIS::KC_W, false)}, EventType::game,
+                   std::bind(&Car::stop_accelerating, car_));
+  input_->add_hook({std::make_pair(OIS::KC_S, true)}, EventType::game,
+                     std::bind(&Car::brake, car_));
+  input_->add_hook({std::make_pair(OIS::KC_S, false)}, EventType::game,
+                   std::bind(&Car::stop_braking, car_));
 }
