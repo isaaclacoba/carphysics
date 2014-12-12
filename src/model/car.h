@@ -38,7 +38,7 @@ class Car {
 
   const float   f_max_engine_ = 1000.f;
   const float   f_min_increment_ = 2;
-  const float   f_max_breaking_ = 100.f;
+  const float   f_max_braking_ = 100.f;
 
 
   const float    gVehicleSteering = 0.f;
@@ -61,8 +61,8 @@ class Car {
 
   bool accelerating_, braking_, turning_;
 
-  float   f_engine_ = 0.f;
-  float   gBreakingForce = 0.f;
+  float   f_engine_;
+  float   f_braking_;
 
 
  public:
@@ -73,8 +73,9 @@ class Car {
 
   void initialize(Physics::shared physics, Scene::shared scene);
   void accelerate();
+  void stop_accelerating();
   void brake();
-
+  void stop_braking();
   void update();
 
  private:
