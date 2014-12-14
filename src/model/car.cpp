@@ -18,8 +18,7 @@
 
 Car::Car() {
   accelerating_ = turning_ = false;
-  f_engine_ = 0.f;
-  f_braking_ = 0.f;
+  f_engine_ = f_braking_ = steering_ = 0.f;
 }
 
 Car::~Car() {
@@ -40,20 +39,20 @@ Car::initialize(Physics::shared physics, Scene::shared scene) {
 
   add_physic_wheel(true, btVector3(car_dimensions_.getX()-(0.3*wheelWidth),
                                    connectionHeight,
-                                   car_dimensions_.getZ()-wheelRadius));
+                                   car_dimensions_.getZ()-wheelRadius), 0);
 
   add_physic_wheel(true, btVector3(-car_dimensions_.getX()+(0.3*wheelWidth),
                                    connectionHeight,
-                                   car_dimensions_.getZ()-wheelRadius));
+                                   car_dimensions_.getZ()-wheelRadius), 1);
 
 
   add_physic_wheel(false, btVector3(-car_dimensions_.getX()+(0.3*wheelWidth),
                                     connectionHeight,
-                                    -car_dimensions_.getZ()+wheelRadius));
+                                    -car_dimensions_.getZ()+wheelRadius), 2);
 
   add_physic_wheel(false, btVector3(car_dimensions_.getX()-(0.3*wheelWidth),
                                     connectionHeight,
-                                    -car_dimensions_.getZ()+wheelRadius));
+                                    -car_dimensions_.getZ()+wheelRadius), 3);
   configure_wheels();
 }
 
@@ -68,11 +67,6 @@ Car::init_graphic_bodies(Scene::shared scene) {
   for (int i = 0; i < 4; ++i) {
     add_graphic_wheel(scene, "wheel" + i);
   }
-
-  wheels_nodes_[0]->translate( 1,  -1,  1);
-  wheels_nodes_[1]->translate(-1,  -1,  1);
-  wheels_nodes_[2]->translate( 1,  -1, -1);
-  wheels_nodes_[3]->translate(-1,  -1, -1);
 }
 
 void
@@ -91,7 +85,7 @@ Car::init_physic_bodies(Physics::shared physics) {
     create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
                                   btVector3(0, 20, 0)),
                       chassis_node_, compound, 800);
-  // m_carChassis->setDamping(0.2,0.2);
+  m_carChassis->setDamping(0.2,0.2);
   m_carChassis->setActivationState(DISABLE_DEACTIVATION);
 }
 
@@ -117,10 +111,12 @@ Car::add_graphic_wheel(Scene::shared scene, std::string name) {
 }
 
 void
-Car::add_physic_wheel(bool is_front, btVector3 connection_point) {
+Car::add_physic_wheel(bool is_front, btVector3 connection_point, int wheel_index) {
   m_vehicle->addWheel(connection_point, wheelDirectionCS0,
                       wheelAxleCS,suspensionRestLength,wheelRadius,
                       m_tuning, is_front);
+  wheels_nodes_[wheel_index]->translate(connection_point.getX(),
+                              -connection_point.getY(),   connection_point.getZ());
 }
 
 
@@ -138,22 +134,21 @@ Car::configure_wheels(){
 
 void
 Car::control_speed() {
-  f_engine_ = (f_engine_ - f_braking_ <= 0) ? 0 : f_engine_ - f_braking_;
+  if(!accelerating_ && !braking_)
+    f_engine_ = (f_engine_ - f_braking_ <= 0) ? 0 : f_engine_ - deceleration_;
 }
 
 
 void
 Car::accelerate() {
-  std::cout << __func__ << std::endl;
   accelerating_ = true;
-  f_engine_ = (f_engine_ >= f_max_engine_) ? f_max_engine_: f_engine_ + f_min_increment_;
-  f_braking_ = 0;
+  f_engine_ = (f_engine_ >= f_max_engine_) ? f_max_engine_: f_engine_ + acceleration_;
 }
 
 void
 Car::stop_accelerating() {
   accelerating_ = false;
-  f_engine_ = (f_engine_ >= f_max_engine_) ? f_max_engine_: f_engine_ - f_min_increment_;
+  f_braking_ = deceleration_;
 }
 
 void
@@ -161,21 +156,39 @@ Car::brake() {
   accelerating_ = false;
   braking_ = true;
   f_braking_ = f_max_braking_;
-    f_engine_ = (f_engine_ - f_braking_ <= 0) ? 0 : f_engine_ - f_braking_;
+  f_engine_ = (m_vehicle->getCurrentSpeedKmHour() < 5) ? 0 : f_engine_ - f_braking_;
+  std::cout << "curren speed: "<< m_vehicle->getCurrentSpeedKmHour() << std::endl;
 }
 
 void
 Car::stop_braking() {
-  std::cout << __func__ << std::endl;
   braking_ = false;
-  f_braking_ = f_min_increment_;
+  f_braking_ = deceleration_;
 }
 
+void
+Car::turn(Direction direction) {
+  if(direction == Direction::right)
+    steering_ = (steering_ > steering_clamp_)? steering_clamp_ : steering_ - steering_increment_;
+  else
+    steering_ = (steering_ < -steering_clamp_)? -steering_clamp_ : steering_ + steering_increment_;
+}
+
+void
+Car::stop_turning() {
+  steering_ = 0;
+}
 
 void
 Car::update() {
-  control_speed();
 
+  control_speed();
+  std::cout << __func__
+            << "motor: " << f_engine_
+            << std::endl;
   m_vehicle->applyEngineForce(f_engine_, 0);
   m_vehicle->applyEngineForce(f_engine_, 1);
+
+  m_vehicle->setSteeringValue(steering_, 0);
+  m_vehicle->setSteeringValue(steering_, 1);
 }
