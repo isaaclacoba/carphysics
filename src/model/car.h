@@ -18,7 +18,7 @@
 #include "physics.h"
 #include "scene.h"
 
-
+enum class Direction {right, left};
 class Car {
   btRigidBody* m_carChassis;
   btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
@@ -36,14 +36,14 @@ class Car {
   const int upIndex = 1;
   const int forwardIndex = 2;
 
-  const float   f_max_engine_ = 1000.f;
-  const float   f_min_increment_ = 2;
-  const float   f_max_braking_ = 100.f;
-
+  const float   f_max_engine_ = 2000.f;
+  const float   acceleration_ = 1;
+  const float   deceleration_ = 4;
+  const float   f_max_braking_ = 10.f;
+  const float    steering_increment_ = 0.04f;
+  const float    steering_clamp_ = 0.3f;
 
   const float    gVehicleSteering = 0.f;
-  const float    steeringIncrement = 0.04f;
-  const float    steeringClamp = 0.3f;
   const float    wheelRadius = 0.5f;
   const float    wheelWidth = 0.4f;
   const float    wheelFriction = 1000;//BT_LARGE_FLOAT;
@@ -51,7 +51,7 @@ class Car {
   const float    suspensionDamping = 2.3f;
   const float    suspensionCompression = 4.4f;
   const float    rollInfluence = 0.1f;//1.0f;
-  const float    connectionHeight = 0.7f;
+  const float    connectionHeight = 0.5f;
   const btVector3 car_dimensions_ = btVector3(1, 0.5f, 2);
   const btScalar suspensionRestLength = btScalar(0.6);
 
@@ -61,9 +61,7 @@ class Car {
 
   bool accelerating_, braking_, turning_;
 
-  float   f_engine_;
-  float   f_braking_;
-
+  float   f_engine_, f_braking_, steering_;
 
  public:
   typedef std::shared_ptr<Car> shared;
@@ -76,6 +74,9 @@ class Car {
   void stop_accelerating();
   void brake();
   void stop_braking();
+  void turn(Direction direction);
+  void stop_turning();
+
   void update();
 
  private:
@@ -83,7 +84,7 @@ class Car {
   void init_physic_bodies(Physics::shared physics);
   void init_raycast_car(Physics::shared physics);
   void add_graphic_wheel(Scene::shared scene, std::string name);
-  void add_physic_wheel(bool is_front, btVector3 connection_point);
+  void add_physic_wheel(bool is_front, btVector3 connection_point, int wheel_index);
   void configure_wheels();
 
   void control_speed();

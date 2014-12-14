@@ -27,7 +27,7 @@ src/model/car.o
 CXX=g++ -std=c++11
 CXXFLAGS = -Wall -ggdb $(HEADERFLAGS) \
  $(shell pkg-config --cflags OGRE OIS bullet)
-LDLIBS = $(shell pkg-config --libs-only-l OGRE OIS bullet)
+LDLIBS = $(shell pkg-config --libs-only-l OGRE OIS bullet) -lBulletWorldImporter
 
 all: src/main
 

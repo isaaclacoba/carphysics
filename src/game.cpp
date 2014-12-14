@@ -60,10 +60,18 @@ Game::register_hooks() {
                    std::bind(&EventListener::shutdown, input_));
   input_->add_hook({std::make_pair(OIS::KC_W, true)}, EventType::game,
                    std::bind(&Car::accelerate, car_));
- input_->add_hook({std::make_pair(OIS::KC_W, false)}, EventType::game,
+ input_->add_hook({std::make_pair(OIS::KC_W, false)}, EventType::menu,
                    std::bind(&Car::stop_accelerating, car_));
   input_->add_hook({std::make_pair(OIS::KC_S, true)}, EventType::game,
                      std::bind(&Car::brake, car_));
-  input_->add_hook({std::make_pair(OIS::KC_S, false)}, EventType::game,
+  input_->add_hook({std::make_pair(OIS::KC_S, false)}, EventType::menu,
                    std::bind(&Car::stop_braking, car_));
+  input_->add_hook({std::make_pair(OIS::KC_D, true)}, EventType::game,
+                   std::bind(&Car::turn, car_, Direction::right));
+  input_->add_hook({std::make_pair(OIS::KC_A, true)}, EventType::game,
+                   std::bind(&Car::turn, car_, Direction::left));
+  input_->add_hook({std::make_pair(OIS::KC_D, false)}, EventType::game,
+                   std::bind(&Car::stop_turning, car_));
+  input_->add_hook({std::make_pair(OIS::KC_A, false)}, EventType::game,
+                   std::bind(&Car::stop_turning, car_));
 }

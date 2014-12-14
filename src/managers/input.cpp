@@ -60,8 +60,8 @@ EventListener::capture(void) {
 
 void
 EventListener::check_events(void) {
-  for(auto key: events_)
-    std::cout << key.first << std::endl;
+  // for(auto key: events_)
+  //   std::cout << key.first << std::endl;
 
   if(mouse_triggers_[mouse_key_pressed_]) {
     mouse_triggers_[mouse_key_pressed_]();
@@ -70,6 +70,7 @@ EventListener::check_events(void) {
 
   if(menu_triggers_[events_]){
     menu_triggers_[events_]();
+
   }
 
   if(game_triggers_[events_])
@@ -128,7 +129,7 @@ bool
 EventListener::mouseReleased(const OIS::MouseEvent& evt,
                              OIS::MouseButtonID id) {
   return true;
-  }
+}
 
 void
 EventListener::windowClosed(Ogre::RenderWindow* window){
@@ -156,6 +157,6 @@ EventListener::remove_key_from_buffer(KeyBoardKey event) {
     auto keyevent = find (events_.begin(), events_.end(), event);
     if(keyevent == events_.end())
       return;
-
+    std::cout << "key removed: " << event.first << std::endl;
     events_.erase(keyevent);
 }
