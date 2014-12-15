@@ -14,6 +14,7 @@
 //
 //     You should have received a copy of the GNU General Public License
 //     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #include "car.h"
 
 Car::Car() {
@@ -157,7 +158,6 @@ Car::brake() {
   braking_ = true;
   f_braking_ = f_max_braking_;
   f_engine_ = (m_vehicle->getCurrentSpeedKmHour() < 5) ? 0 : f_engine_ - f_braking_;
-  std::cout << "curren speed: "<< m_vehicle->getCurrentSpeedKmHour() << std::endl;
 }
 
 void
@@ -169,9 +169,12 @@ Car::stop_braking() {
 void
 Car::turn(Direction direction) {
   if(direction == Direction::right)
-    steering_ = (steering_ > steering_clamp_)? steering_clamp_ : steering_ - steering_increment_;
+    steering_ = (steering_ < -steering_clamp_)?
+      -steering_clamp_ : steering_ - steering_increment_;
   else
-    steering_ = (steering_ < -steering_clamp_)? -steering_clamp_ : steering_ + steering_increment_;
+    steering_ = (steering_ > steering_clamp_)?
+      steering_clamp_ : steering_ + steering_increment_;
+  std::cout << "curren steering: "<< steering_ << std::endl;
 }
 
 void
