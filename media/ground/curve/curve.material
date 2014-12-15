@@ -1,12 +1,12 @@
-// camino00 genrated by blender2ogre 0.5.9
+// curve genrated by blender2ogre 0.6.0
 
-material camino00 
+material curve 
 {
     receive_shadows on 
 
     technique
     {
-        pass camino00
+        pass curve
         {
             ambient 0.800000011920929 0.800000011920929 0.800000011920929 1.0
             diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865 1.0
@@ -29,14 +29,12 @@ material camino00
             scene_blend_op add
             shading gouraud
             transparent_sorting on
+	
+	    texture_unit
+	    {
+		texture grid.jpg
+	    }
 
-            texture_unit 
-            {
-                texture camino00UV.png
-                tex_address_mode wrap
-                scale 1.0 1.0
-                colour_op modulate
-            }
         }
     }
 }

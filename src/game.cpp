@@ -28,9 +28,8 @@ Game::~Game() {
 
 void
 Game::start() {
-  create_ground(Ogre::Vector3(0,0,0), "ground1");
-  create_ground(Ogre::Vector3(0,0,20), "ground2");
-  create_ground(Ogre::Vector3(20,0,0), "ground3");
+  create_circular_track();
+
   create_car();
 
   register_hooks();
@@ -43,9 +42,9 @@ Game::game_loop() {
 
   while(!input_->exit_) {
     delta_time += timer_.get_delta_time();
-    input_->capture();
     input_->check_events();
     if(delta_time >= 0.017) {
+      input_->capture();
       car_->update();
       physics_->step_simulation(delta_time, 2);
         scene_->render_one_frame();
@@ -55,8 +54,10 @@ Game::game_loop() {
 }
 
 void
-Game::create_ground(Ogre::Vector3 position, std::string name) {
+Game::create_ground(Ogre::Vector3 position, std::string name, Ogre::Degree angle) {
   scene_->create_ground(position, name);
+  Ogre::SceneNode* ground = scene_->get_node(name);
+  ground->yaw(angle);
 
   Ogre::Entity* ground_entity = static_cast<Ogre::Entity*>
     (scene_->get_node(name)->getAttachedObject(0));
@@ -64,10 +65,12 @@ Game::create_ground(Ogre::Vector3 position, std::string name) {
 
   btCollisionShape* ground_shape = new btBvhTriangleMeshShape(strider,true,true);
   btRigidBody* plane_body = physics_->
-    create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
-                                  btVector3(position.x, position.y + 1, position.z)),
-                      scene_->get_node(name),
-                      ground_shape, 0);
+    create_rigid_body(btTransform(btQuaternion(btVector3(0, 1, 0),
+                                               btScalar(angle.valueRadians())),
+                                  btVector3(ground->getPosition().x,
+                                            ground->getPosition().y + 1,
+                                            ground->getPosition().z)),
+                      scene_->get_node(name), ground_shape, 0);
 
   plane_body->setRestitution(0.2);
   plane_body->setFriction(0.5f);
@@ -96,11 +99,34 @@ Game::register_hooks() {
 
   input_->add_hook({std::make_pair(OIS::KC_D, true)}, EventType::game,
                    std::bind(&Car::turn, car_, Direction::right));
-  input_->add_hook({std::make_pair(OIS::KC_D, false)}, EventType::menu,
+  input_->add_hook({std::make_pair(OIS::KC_W, true), std::make_pair(OIS::KC_D, true)},
+                   EventType::game,
+                   std::bind(&Car::turn, car_, Direction::right));
+  input_->add_hook({std::make_pair(OIS::KC_W, true), std::make_pair(OIS::KC_D, false)},
+                   EventType::game,
+                   std::bind(&Car::stop_turning, car_));
+  input_->add_hook({std::make_pair(OIS::KC_D, false)},
+                   EventType::menu,
                    std::bind(&Car::stop_turning, car_));
 
   input_->add_hook({std::make_pair(OIS::KC_A, true)}, EventType::game,
                    std::bind(&Car::turn, car_, Direction::left));
+  input_->add_hook({std::make_pair(OIS::KC_W, true), std::make_pair(OIS::KC_A, true)},
+                   EventType::game,
+                   std::bind(&Car::turn, car_, Direction::left));
+
+  input_->add_hook({std::make_pair(OIS::KC_W, true), std::make_pair(OIS::KC_A, false)},
+                   EventType::game,
+                   std::bind(&Car::stop_turning, car_));
+
   input_->add_hook({std::make_pair(OIS::KC_A, false)}, EventType::menu,
                    std::bind(&Car::stop_turning, car_));
+}
+
+void
+Game::create_circular_track() {
+  create_ground(Ogre::Vector3(60, 0, 0), "curve1", Ogre::Degree(0));
+  create_ground(Ogre::Vector3(60, 0, 0), "curve2", Ogre::Degree(90));
+  create_ground(Ogre::Vector3(60, 0, 0), "curve3", Ogre::Degree(180));
+  create_ground(Ogre::Vector3(60, 0, 0), "curve4", Ogre::Degree(270));
 }

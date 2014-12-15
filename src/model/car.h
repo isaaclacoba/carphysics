@@ -36,11 +36,11 @@ class Car {
   const int upIndex = 1;
   const int forwardIndex = 2;
 
-  const float    f_max_engine_ = 2000.f;
-  const float    acceleration_ = 1;
-  const float    deceleration_ = 4;
+  const float    f_max_engine_ = 3000.f;
+  const float    acceleration_ = 10;
+  const float    deceleration_ = 10;
   const float    f_max_braking_ = 10.f;
-  const float    steering_increment_ = 0.001f;
+  const float    steering_increment_ = 0.000003f;
   const float    steering_clamp_ = 0.3f;
 
   const float    gVehicleSteering = 0.f;
@@ -51,7 +51,7 @@ class Car {
   const float    suspensionDamping = 2.3f;
   const float    suspensionCompression = 4.4f;
   const float    rollInfluence = 0.1f;//1.0f;
-  const float    connectionHeight = 0.5f;
+  const float    connectionHeight = 0.7f;
   const btVector3 car_dimensions_ = btVector3(1, 0.5f, 2);
   const btScalar suspensionRestLength = btScalar(0.6);
 
