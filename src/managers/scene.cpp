@@ -128,16 +128,17 @@ Scene::create_camera(Ogre::RenderWindow* window) {
 }
 
 Ogre::SceneNode*
-Scene::create_ground(void) {
+Scene::create_ground(Ogre::Vector3 position, std::string name) {
   Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
 
-  Ogre::MeshManager::getSingleton().createPlane("ground",
+  Ogre::MeshManager::getSingleton().createPlane(name,
       Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
       plane, 50, 50, 20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Z);
 
-  Ogre::SceneNode* ground_node = create_node("ground");
-  add_child("", "ground");
-  Ogre::Entity* ground_entity = create_entity("ground", "camino00UV.mesh");
+  Ogre::SceneNode* ground_node = create_node(name);
+  ground_node->setPosition(position);
+  add_child("", name);
+  Ogre::Entity* ground_entity = create_entity(name, "camino00UV.mesh");
   ground_node->attachObject(ground_entity);
   ground_entity->setMaterialName("Ground");
 
