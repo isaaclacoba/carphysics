@@ -114,7 +114,7 @@ Scene::create_camera(Ogre::RenderWindow* window) {
   Ogre::SceneNode* camera_node = create_node("camera_node");
   add_child("", "camera_node");
   camera_ = sceneManager_->createCamera("PlayerCamera");
-  camera_->setPosition(Ogre::Vector3(0 , 40, 40));
+  camera_->setPosition(Ogre::Vector3(-60 , 60, -60));
   camera_->lookAt(Ogre::Vector3(0, 0, 0));
   camera_->setNearClipDistance(5);
   camera_->setFarClipDistance(300);
@@ -128,19 +128,13 @@ Scene::create_camera(Ogre::RenderWindow* window) {
 }
 
 Ogre::SceneNode*
-Scene::create_ground(Ogre::Vector3 position, std::string name) {
-  Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
-
-  Ogre::MeshManager::getSingleton().createPlane(name,
-      Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-      plane, 50, 50, 20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Z);
-
+Scene::create_ground(Ogre::Vector3 position, std::string name, std::string mesh) {
   Ogre::SceneNode* ground_node = create_node(name);
   ground_node->setPosition(position);
   add_child("", name);
-  Ogre::Entity* ground_entity = create_entity(name, "camino00UV.mesh");
+
+  Ogre::Entity* ground_entity = create_entity(name, mesh);
   ground_node->attachObject(ground_entity);
-  ground_entity->setMaterialName("Ground");
 
   return ground_node;
 }
@@ -149,8 +143,8 @@ void
 Scene::render_one_frame(void) {
   Ogre::WindowEventUtilities::messagePump();
   root_->renderOneFrame();
-  // Ogre::Real actual_fps =  window_->getAverageFPS();
-  // std::cout << actual_fps << std::endl;
+  Ogre::Real actual_fps =  window_->getAverageFPS();
+  std::cout << actual_fps << std::endl;
 }
 
 Ogre::Ray

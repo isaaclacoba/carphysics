@@ -157,7 +157,7 @@ Car::brake() {
   accelerating_ = false;
   braking_ = true;
   f_braking_ = f_max_braking_;
-  f_engine_ = (m_vehicle->getCurrentSpeedKmHour() < 5) ? 0 : f_engine_ - f_braking_;
+  f_engine_ = (f_engine_ <= f_max_engine_) ? -f_max_engine_: f_engine_ - acceleration_;
 }
 
 void
@@ -183,11 +183,7 @@ Car::stop_turning() {
 
 void
 Car::update() {
-
   control_speed();
-  std::cout << __func__
-            << "motor: " << f_engine_
-            << std::endl;
   m_vehicle->applyEngineForce(f_engine_, 0);
   m_vehicle->applyEngineForce(f_engine_, 1);
 

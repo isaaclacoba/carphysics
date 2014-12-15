@@ -60,9 +60,6 @@ EventListener::capture(void) {
 
 void
 EventListener::check_events(void) {
-  // for(auto key: events_)
-  //   std::cout << key.first << std::endl;
-
   if(mouse_triggers_[mouse_key_pressed_]) {
     mouse_triggers_[mouse_key_pressed_]();
     mouse_key_pressed_ =  std::make_pair(OIS::MB_Button7, false);
@@ -83,8 +80,6 @@ EventListener::check_events(void) {
 
 bool
 EventListener::shutdown() {
-    std::cout << __func__ << " "
-            << std::endl;
     exit_ = true;
     return true;
 }
@@ -96,8 +91,6 @@ EventListener::clear_hooks() {
 
 bool
 EventListener::keyPressed(const OIS::KeyEvent& arg) {
-  std::cout << __func__ << " "
-            << arg.key << std::endl;
   remove_key_from_buffer(std::make_pair(arg.key, false));
   events_.push_back(std::make_pair(arg.key, true));
   return true;
@@ -105,8 +98,6 @@ EventListener::keyPressed(const OIS::KeyEvent& arg) {
 
 bool
 EventListener::keyReleased(const OIS::KeyEvent& arg) {
-  std::cout << __func__ << " "
-            << arg.key << std::endl;
   remove_key_from_buffer(std::make_pair(arg.key, true));
   events_.push_back(std::make_pair(arg.key, false));
    return true;
@@ -157,6 +148,5 @@ EventListener::remove_key_from_buffer(KeyBoardKey event) {
     auto keyevent = find (events_.begin(), events_.end(), event);
     if(keyevent == events_.end())
       return;
-    std::cout << "key removed: " << event.first << std::endl;
     events_.erase(keyevent);
 }
