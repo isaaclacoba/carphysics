@@ -174,7 +174,6 @@ Car::turn(Direction direction) {
   else
     steering_ = (steering_ > steering_clamp_)?
       steering_clamp_ : steering_ + steering_increment_;
-  std::cout << "curren steering: "<< steering_ << std::endl;
 }
 
 void

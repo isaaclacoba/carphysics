@@ -6,6 +6,7 @@
 
 #include "input.h"
 #include "timer.h"
+#include "meshstrider.h"
 
 class Game {
   Timer timer_;
