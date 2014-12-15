@@ -1,4 +1,20 @@
 // -*- coding:utf-8; tab-width:4; mode:cpp -*-
+// Copyright (C) 2014  ISAAC LACOBA MOLINA
+// Tinman author: Isaac Lacoba Molina
+//
+//     This program is free software: you can redistribute it and/or modify
+//     it under the terms of the GNU General Public License as published by
+//     the Free Software Foundation, either version 3 of the License, or
+//     (at your option) any later version.
+//
+//     This program is distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//     GNU General Public License for more details.
+//
+//     You should have received a copy of the GNU General Public License
+//     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #include "game.h"
 
 Game::Game() {
@@ -70,8 +86,8 @@ Game::register_hooks() {
                    std::bind(&Car::turn, car_, Direction::right));
   input_->add_hook({std::make_pair(OIS::KC_A, true)}, EventType::game,
                    std::bind(&Car::turn, car_, Direction::left));
-  input_->add_hook({std::make_pair(OIS::KC_D, false)}, EventType::game,
+  input_->add_hook({std::make_pair(OIS::KC_D, false)}, EventType::menu,
                    std::bind(&Car::stop_turning, car_));
-  input_->add_hook({std::make_pair(OIS::KC_A, false)}, EventType::game,
+  input_->add_hook({std::make_pair(OIS::KC_A, false)}, EventType::menu,
                    std::bind(&Car::stop_turning, car_));
 }
