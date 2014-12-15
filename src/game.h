@@ -25,7 +25,7 @@ public:
 
 private:
   void game_loop();
-  void create_ground();
+  void create_ground(Ogre::Vector3 position, std::string name);
   void create_car();
   void register_hooks();
 };

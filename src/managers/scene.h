@@ -61,7 +61,7 @@ class Scene {
   void create_camera(Ogre::RenderWindow* window);
 
   Ogre::SceneNode* get_node(std::string node);
-  Ogre::SceneNode* create_ground(void);
+  Ogre::SceneNode* create_ground(Ogre::Vector3 position = Ogre::Vector3(0, 0, 0), std::string name = "ground");
 
   Ogre::Ray set_ray_query(float x, float y);
 

@@ -28,7 +28,9 @@ Game::~Game() {
 
 void
 Game::start() {
-  create_ground();
+  create_ground(Ogre::Vector3(0,0,0), "ground1");
+  create_ground(Ogre::Vector3(0,0,20), "ground2");
+  create_ground(Ogre::Vector3(20,0,0), "ground3");
   create_car();
 
   register_hooks();
@@ -53,18 +55,20 @@ Game::game_loop() {
 }
 
 void
-Game::create_ground() {
-  scene_->create_ground();
+Game::create_ground(Ogre::Vector3 position, std::string name) {
+  scene_->create_ground(position, name);
 
   Ogre::Entity* ground_entity = static_cast<Ogre::Entity*>
-    (scene_->get_node("ground")->getAttachedObject(0));
+    (scene_->get_node(name)->getAttachedObject(0));
   MeshStrider* strider = new MeshStrider(ground_entity->getMesh().get());
 
   btCollisionShape* ground_shape = new btBvhTriangleMeshShape(strider,true,true);
-  // btCollisionShape* groundShape = physics_->create_shape(btVector3(50, 1, 50));
-  btRigidBody* plane_body = physics_->create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
-                                         btVector3(0, 1, 0)),
-                              scene_->get_node("ground"), ground_shape, 0);
+  btRigidBody* plane_body = physics_->
+    create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
+                                  btVector3(position.x, position.y + 1, position.z)),
+                      scene_->get_node(name),
+                      ground_shape, 0);
+
   plane_body->setRestitution(0.2);
   plane_body->setFriction(0.5f);
 }
