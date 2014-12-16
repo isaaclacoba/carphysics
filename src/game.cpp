@@ -136,8 +136,8 @@ void
 Game::create_elipse_track() {
   create_ground(Ogre::Vector3(0, 0, 0), "curve1", "curve.mesh", Ogre::Degree(0));
   create_ground(Ogre::Vector3(0, 0, 0), "curve2", "curve.mesh", Ogre::Degree(270));
-  create_ground(Ogre::Vector3(-30, 0, 60), "rect1",  "rect.mesh", Ogre::Degree(0));
-  create_ground(Ogre::Vector3(-30, 0, -60), "rect2",  "rect.mesh", Ogre::Degree(0));
-  create_ground(Ogre::Vector3(60, 0, 5), "curve3", "curve.mesh", Ogre::Degree(90));
-  create_ground(Ogre::Vector3(60, 0, 5), "curve4", "curve.mesh", Ogre::Degree(180));
+  create_ground(Ogre::Vector3(29, 0, 60.5), "rect1",  "rect.mesh", Ogre::Degree(0));
+  create_ground(Ogre::Vector3(29, 0, -60.5), "rect2",  "rect.mesh", Ogre::Degree(0));
+  create_ground(Ogre::Vector3(60, 0, 0), "curve3", "curve.mesh", Ogre::Degree(90));
+  create_ground(Ogre::Vector3(60, 0, 0), "curve4", "curve.mesh", Ogre::Degree(180));
 }

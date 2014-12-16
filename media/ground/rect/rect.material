@@ -1,8 +1,8 @@
 // rect genrated by blender2ogre 0.6.0
 
-material rect 
+material rect
 {
-    receive_shadows off 
+    receive_shadows on
 
     technique
     {
@@ -19,7 +19,7 @@ material rect
             depth_check on
             depth_func less_equal
             depth_write on
-            illumination_stage 
+            illumination_stage
             light_clip_planes off
             light_scissor off
             lighting on
@@ -29,14 +29,10 @@ material rect
             scene_blend_op add
             shading gouraud
             transparent_sorting on
-
-            texture_unit 
-            {
-                texture grid.jpg
-                tex_address_mode wrap
-                scale 1.0 1.0
-                colour_op modulate
-            }
+            texture_unit
+	          {
+	    	    texture grid.jpg
+	          }
         }
     }
 }
