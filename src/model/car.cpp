@@ -32,9 +32,9 @@ Car::~Car() {
 }
 
 void
-Car::initialize(Physics::shared physics, Scene::shared scene) {
+Car::initialize(Physics::shared physics, Scene::shared scene, btVector3 position) {
   init_graphic_bodies(scene);
-  init_physic_bodies(physics);
+  init_physic_bodies(physics, position);
 
   init_raycast_car(physics);
 
@@ -71,7 +71,7 @@ Car::init_graphic_bodies(Scene::shared scene) {
 }
 
 void
-Car::init_physic_bodies(Physics::shared physics) {
+Car::init_physic_bodies(Physics::shared physics, btVector3 position) {
   btTransform tr;
   tr.setIdentity();
 
@@ -84,7 +84,7 @@ Car::init_physic_bodies(Physics::shared physics) {
 
   m_carChassis =  physics->
     create_rigid_body(btTransform(btQuaternion(0, 0, 0, 1),
-                                  btVector3(0, 20, 0)),
+                                  position),
                       chassis_node_, compound, 800);
   m_carChassis->setDamping(0.2,0.2);
   m_carChassis->setActivationState(DISABLE_DEACTIVATION);
