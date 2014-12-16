@@ -69,7 +69,8 @@ class Car {
   Car();
   virtual ~Car();
 
-  void initialize(Physics::shared physics, Scene::shared scene);
+  void initialize(Physics::shared physics, Scene::shared scene,
+                  btVector3 position = btVector3(0,0 ,0));
   void accelerate();
   void stop_accelerating();
   void brake();
@@ -81,10 +82,11 @@ class Car {
 
  private:
   void init_graphic_bodies(Scene::shared scene);
-  void init_physic_bodies(Physics::shared physics);
+  void init_physic_bodies(Physics::shared physics, btVector3 position);
   void init_raycast_car(Physics::shared physics);
   void add_graphic_wheel(Scene::shared scene, std::string name);
-  void add_physic_wheel(bool is_front, btVector3 connection_point, int wheel_index);
+  void add_physic_wheel(bool is_front, btVector3 connection_point,
+                        int wheel_index);
   void configure_wheels();
 
   void control_speed();

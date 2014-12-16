@@ -114,7 +114,7 @@ Scene::create_camera(Ogre::RenderWindow* window) {
   Ogre::SceneNode* camera_node = create_node("camera_node");
   add_child("", "camera_node");
   camera_ = sceneManager_->createCamera("PlayerCamera");
-  camera_->setPosition(Ogre::Vector3(-60 , 60, -60));
+  camera_->setPosition(Ogre::Vector3(-80 , 100, 100));
   camera_->lookAt(Ogre::Vector3(0, 0, 0));
   camera_->setNearClipDistance(5);
   camera_->setFarClipDistance(300);

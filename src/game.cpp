@@ -28,7 +28,7 @@ Game::~Game() {
 
 void
 Game::start() {
-  create_circular_track();
+  create_elipse_track();
 
   create_car();
 
@@ -54,8 +54,9 @@ Game::game_loop() {
 }
 
 void
-Game::create_ground(Ogre::Vector3 position, std::string name, Ogre::Degree angle) {
-  scene_->create_ground(position, name);
+Game::create_ground(Ogre::Vector3 position, std::string name,
+                    std::string mesh, Ogre::Degree angle) {
+  scene_->create_ground(position, name, mesh);
   Ogre::SceneNode* ground = scene_->get_node(name);
   ground->yaw(angle);
 
@@ -79,7 +80,7 @@ Game::create_ground(Ogre::Vector3 position, std::string name, Ogre::Degree angle
 void
 Game::create_car() {
   car_ = std::make_shared<Car>();
-  car_->initialize(physics_, scene_);
+  car_->initialize(physics_, scene_, btVector3(0, 2, 60));
 }
 
 void
@@ -125,8 +126,18 @@ Game::register_hooks() {
 
 void
 Game::create_circular_track() {
-  create_ground(Ogre::Vector3(60, 0, 0), "curve1", Ogre::Degree(0));
-  create_ground(Ogre::Vector3(60, 0, 0), "curve2", Ogre::Degree(90));
-  create_ground(Ogre::Vector3(60, 0, 0), "curve3", Ogre::Degree(180));
-  create_ground(Ogre::Vector3(60, 0, 0), "curve4", Ogre::Degree(270));
+  create_ground(Ogre::Vector3(60, 0, 0), "curve1", "curve.mesh", Ogre::Degree(0));
+  create_ground(Ogre::Vector3(60, 0, 0), "curve2", "curve.mesh", Ogre::Degree(90));
+  create_ground(Ogre::Vector3(60, 0, 0), "curve3", "curve.mesh", Ogre::Degree(180));
+  create_ground(Ogre::Vector3(60, 0, 0), "curve4", "curve.mesh", Ogre::Degree(270));
+}
+
+void
+Game::create_elipse_track() {
+  create_ground(Ogre::Vector3(0, 0, 0), "curve1", "curve.mesh", Ogre::Degree(0));
+  create_ground(Ogre::Vector3(0, 0, 0), "curve2", "curve.mesh", Ogre::Degree(270));
+  create_ground(Ogre::Vector3(-30, 0, 60), "rect1",  "rect.mesh", Ogre::Degree(0));
+  create_ground(Ogre::Vector3(-30, 0, -60), "rect2",  "rect.mesh", Ogre::Degree(0));
+  create_ground(Ogre::Vector3(60, 0, 5), "curve3", "curve.mesh", Ogre::Degree(90));
+  create_ground(Ogre::Vector3(60, 0, 5), "curve4", "curve.mesh", Ogre::Degree(180));
 }

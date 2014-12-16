@@ -25,8 +25,10 @@ public:
 
 private:
   void game_loop();
-  void create_ground(Ogre::Vector3 position, std::string name, Ogre::Degree angle);
+  void create_ground(Ogre::Vector3 position, std::string name,
+                     std::string mesh, Ogre::Degree angle);
   void create_circular_track();
+  void create_elipse_track();
   void create_car();
   void register_hooks();
 };
