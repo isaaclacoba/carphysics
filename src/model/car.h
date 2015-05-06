@@ -36,11 +36,11 @@ class Car {
   const int upIndex = 1;
   const int forwardIndex = 2;
 
-  const float    f_max_engine_ = 3000.f;
-  const float    acceleration_ = 10;
-  const float    deceleration_ = 10;
-  const float    f_max_braking_ = 10.f;
-  const float    steering_increment_ = 0.000003f;
+  const float    f_max_engine_ = 5000.f;
+  const float    acceleration_ = 100;
+  const float    deceleration_ = 100;
+  const float    f_max_braking_ = 100.f;
+  const float    steering_increment_ = 0.00003f;
   const float    steering_clamp_ = 0.3f;
 
   const float    gVehicleSteering = 0.f;

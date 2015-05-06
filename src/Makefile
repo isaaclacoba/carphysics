@@ -1,45 +1,24 @@
-#!/usr/bin/make -f
-# -*- mode: makefile -*-
-# Minesweeper author: Isaac Lacoba Molina
-# Copyright (C) 2014  ISAAC LACOBA MOLINA
-
-#     This program is free software: you can redistribute it and/or modify
-#     it under the terms of the GNU General Public License as published by
-#     the Free Software Foundation, either version 3 of the License, or
-#     (at your option) any later version.
-
-#     This program is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU General Public License for more details.
-
-#     You should have received a copy of the GNU General Public License
-#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-
-HEADERDIR=src src/managers src/util src/model
+HEADERDIR=. managers util model state controllers network /usr/include/Ice
 HEADERFLAGS=$(foreach directory, $(HEADERDIR), -I$(directory))
 
-OBJECTS=src/managers/input.o src/managers/physics.o src/managers/scene.o \
-src/util/timer.o src/util/motionstate.o  src/util/bulletimporter.o \
-src/util/meshstrider.o src/game.o src/model/car.o
+vpath %.cpp $(HEADERDIR)
 
-CXX=g++ -std=c++11
-CXXFLAGS = -Wall -ggdb $(HEADERFLAGS) \
- $(shell pkg-config --cflags OGRE OIS bullet)
-LDLIBS = $(shell pkg-config --libs-only-l OGRE OIS bullet) -lBulletWorldImporter
+OBJECTS=$(patsubst %.cpp, %.o, $(shell find -type f -name '*.cpp' ! -name "main.cpp"))
 
-all: src/main
+CXX=g++ -std=c++14
 
-src/main: $(OBJECTS)
+CXXFLAGS = -Wall -ggdb -Og $(HEADERFLAGS) -DBOOST_LOG_DYN_LINK \
+ $(shell pkg-config --cflags OGRE OIS CEGUI-0 bullet)
 
-src/util/timer.o: src/util/timer.cpp
-	$(CXX) -Wall -ggdb -Isrc/managers	$< -c -o $@
+BOOST_LOG=-DBOOST_LOG_DYN_LINK -lboost_log -lboost_thread -lboost_log_setup
+LDLIBS = $(shell pkg-config --libs-only-l OGRE OIS CEGUI-0 bullet) \
+-lSDL -lSDL_mixer -lCEGUIOgreRenderer-0 \
+$(BOOST_LOG) -lIce -lIceUtil -lpthread
 
+all: main
 
-repeat_test:
-	for i in seq 1 2 3 4 5 6 7 8 9 10; do ./minesweeper_test ; done
+main: ${@:%.o} $(OBJECTS)
 
 clean:
-	$(RM) *# *~ *.o minesweeper_test tests/*.o
-	find . -name "*.o" -delete
+	$(RM) *# *~ main
+	find . -type f \( -name "*.o" -o -name "*#" -o -name "*~" -o -name "*.log" \) -delete

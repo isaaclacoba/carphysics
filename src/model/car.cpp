@@ -62,7 +62,7 @@ Car::init_graphic_bodies(Scene::shared scene) {
   chassis_node_ = scene->create_node("chassis_node");
   scene->add_child("", "chassis_node");
   chassis_entity_ = scene->create_entity("chassis_entity",
-                                         "Frank_body.mesh");
+                                         "car.mesh");
   scene->attach(chassis_node_,chassis_entity_);
 
   for (int i = 0; i < 4; ++i) {
@@ -105,7 +105,7 @@ Car::add_graphic_wheel(Scene::shared scene, std::string name) {
   std::string parent = "chassis_node";
   scene->add_child(parent, name);
 
-  std::string mesh = "Frank_wheel.mesh";
+  std::string mesh = "wheel.mesh";
   wheels_entities_.push_back(scene->create_entity(name, mesh));
 
   scene->attach(wheels_nodes_.back(), wheels_entities_.back());

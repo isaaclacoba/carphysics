@@ -143,8 +143,8 @@ void
 Scene::render_one_frame(void) {
   Ogre::WindowEventUtilities::messagePump();
   root_->renderOneFrame();
-  Ogre::Real actual_fps =  window_->getAverageFPS();
-  std::cout << actual_fps << std::endl;
+  // Ogre::Real actual_fps =  window_->getAverageFPS();
+  // std::cout << actual_fps << std::endl;
 }
 
 Ogre::Ray
